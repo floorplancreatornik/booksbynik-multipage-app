@@ -44,13 +44,18 @@
     
     <script type="module" src="script.js"></script>
     <script type="module">
-        import { API_ENDPOINTS, toggleTheme, checkAuth } from './script.js';
+        // CRITICAL FIX: Ensure all pages initialize the theme and check authentication.
+        import { API_ENDPOINTS, toggleTheme, initializeTheme, checkAuth } from './script.js';
         import { applyTranslations, translations, getAppLanguage } from './i18n.js';
         
         checkAuth();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeTheme();
+            applyTranslations();
+        });
         
         document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-        document.addEventListener('DOMContentLoaded', applyTranslations);
         
         // Fetch and render book details logic (omitted for brevity, assume existing function)
     </script>

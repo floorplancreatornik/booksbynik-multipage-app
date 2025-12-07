@@ -1,5 +1,68 @@
-<script type="module">
-        // IMPORT FIX: Ensure initializeTheme and toggleTheme are imported for the login page
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="appTitle">BooksByNIK</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div class="container mx-auto p-4 flex flex-col justify-center items-center min-h-screen">
+        <div class="w-full max-w-md bg-white dark:bg-gray-800 shadow-xl rounded-xl p-6 md:p-8">
+            <header class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-green-600 dark:text-green-400" data-i18n="appTitle">BooksByNIK</h1>
+                <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                    <svg id="sunIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <svg id="moonIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+            </header>
+
+            <h2 class="text-xl font-semibold mb-2" data-i18n="welcome">Welcome to BooksByNIK</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-6" data-i18n="enterDetails">Enter your details to access the catalog.</p>
+
+            <form id="loginForm" class="space-y-4">
+                
+                <div>
+                    <label for="userName" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1" data-i18n="yourName">Your Name</label>
+                    <input type="text" id="userName" required 
+                           data-i18n-placeholder="enterNamePlaceholder"
+                           class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-green-500 focus:border-green-500">
+                </div>
+                
+                <div>
+                    <label for="userNumber" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1" data-i18n="phoneNumber">Phone Number (10 digits)</label>
+                    <div class="flex space-x-2 custom-country-code-fix">
+                        <div class="w-1/4 p-3 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-900 dark:text-gray-300 flex items-center justify-center font-semibold">
+                            +91
+                        </div>
+                        <input type="tel" id="userNumber" required pattern="\d{10}" maxlength="10"
+                               data-i18n-placeholder="enterNumberPlaceholder"
+                               class="w-3/4 p-3 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-green-500 focus:border-green-500">
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <label for="appLanguage" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1" data-i18n="appLanguage">App Language:</label>
+                    <select id="appLanguage" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
+                        <option value="en">English</option>
+                        <option value="ml">മലയാളം (Malayalam)</option>
+                    </select>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400" data-i18n="languageNote">You can change the language anytime from Profile Settings.</p>
+
+                <button type="submit" id="loginButton" class="w-full bg-green-600 text-white py-3 mt-6 rounded-md font-semibold hover:bg-green-700 transition duration-150" data-i18n="loginButton">
+                    Login / Register
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <script type="module" src="script.js"></script>
+    <script type="module" src="i18n.js"></script>
+    
+    <script type="module">
+        // Import all necessary elements for login, theme, and language
         import { API_ENDPOINTS, toggleTheme, initializeTheme } from './script.js'; 
         import { setLanguage, applyTranslations, translations, getAppLanguage } from './i18n.js';
         
@@ -83,3 +146,5 @@
             saveProfileData(name, number, lang);
         });
     </script>
+</body>
+</html>
