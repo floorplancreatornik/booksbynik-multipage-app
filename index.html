@@ -20,31 +20,31 @@
 
         <form id="loginForm" class="bg-white dark:bg-gray-700 shadow-md rounded-lg p-6 space-y-4">
             <div>
-                <label for="userName" class="block text-sm font-medium text-gray-700 dark:text-gray-300" data-i18n="yourName">Your Name</label>
+                <label for="userName" class="block text-sm font-medium text-gray-700 dark:text-gray-200" data-i18n="yourName">Your Name</label>
                 <input type="text" id="userName" name="userName" required
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-800 dark:text-white"
                     data-i18n-placeholder="enterNamePlaceholder" placeholder="Enter your full official name">
             </div>
             
             <div>
-                <label for="userNumber" class="block text-sm font-medium text-gray-700 dark:text-gray-300" data-i18n="phoneNumber">Phone Number</label>
-                <div class="flex">
-                    <span class="inline-flex items-center px-3 border border-r-0 border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 rounded-l-md text-sm">
+                <label for="userNumber" class="block text-sm font-medium text-gray-700 dark:text-gray-200" data-i18n="phoneNumber">Phone Number</label>
+                <div class="flex mt-1"> 
+                    <span class="inline-flex items-center px-3 border border-r-0 border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 rounded-l-md text-sm custom-country-code-fix">
                         +91
                     </span>
                     <input type="tel" id="userNumber" name="userNumber" required pattern="\d{10}" maxlength="10"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-r-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-800 dark:text-white"
+                        class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-r-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-800 dark:text-white"
                         data-i18n-placeholder="enterNumberPlaceholder" placeholder="e.g., 9876543210">
                 </div>
             </div>
             
             <div>
-                <label for="appLanguage" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" data-i18n="appLanguage">App Language:</label>
+                <label for="appLanguage" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1" data-i18n="appLanguage">App Language:</label>
                 <select id="appLanguage" name="appLanguage" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
                     <option value="en">English</option>
                     <option value="ml">മലയാളം (Malayalam)</option>
                 </select>
-                <p class="text-xs mt-1 text-gray-500 dark:text-gray-400" data-i18n="languageNote">You can change the language anytime from Profile Settings.</p>
+                <p class="text-xs mt-1 text-gray-500 dark:text-gray-300" data-i18n="languageNote">You can change the language anytime from Profile Settings.</p>
             </div>
 
             <button type="submit" id="loginButton" class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition duration-150" data-i18n="loginButton">
@@ -54,7 +54,6 @@
     </div>
 
     <script type="module">
-        // --- 🔑 I18N FIX: Import language from i18n.js ---
         import { API_ENDPOINTS } from './script.js'; 
         import { setLanguage, applyTranslations, translations, getAppLanguage } from './i18n.js';
         
@@ -64,7 +63,6 @@
         const appLanguageSelect = document.getElementById('appLanguage');
         const loginButton = document.getElementById('loginButton');
 
-        // Function to handle saving user data to the Google Sheet (PROFILE API FIX)
         async function saveProfileData(name, number, lang) {
             loginButton.textContent = 'Saving Profile...';
             loginButton.disabled = true;
@@ -76,7 +74,6 @@
                 formData.append('userNumber', number);
                 formData.append('appLanguage', lang);
 
-                // Send data to the PROFILE_API_ENDPOINT
                 await fetch(API_ENDPOINTS.PROFILE_API_ENDPOINT, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -84,7 +81,6 @@
                     body: formData.toString()
                 });
 
-                // Profile saved successfully (or endpoint received it), proceed to redirect
                 localStorage.setItem('userName', name);
                 localStorage.setItem('userNumber', number);
                 localStorage.setItem('appLanguage', lang);
@@ -94,7 +90,6 @@
             } catch (error) {
                 console.error('API Error: Could not save profile to Google Sheet.', error);
                 
-                // Fallback: Save locally so the user can still use the app
                 localStorage.setItem('userName', name);
                 localStorage.setItem('userNumber', number);
                 localStorage.setItem('appLanguage', lang);
@@ -104,14 +99,11 @@
             }
         }
         
-        // Initial setup for the language dropdown based on saved preference
         document.addEventListener('DOMContentLoaded', () => {
             const currentLang = getAppLanguage();
             appLanguageSelect.value = currentLang;
-            // applyTranslations runs automatically via script.js/i18n.js listener
         });
         
-        // Listener to immediately update language preference
         appLanguageSelect.addEventListener('change', (e) => {
             setLanguage(e.target.value);
             applyTranslations(); 
@@ -125,7 +117,6 @@
             const lang = appLanguageSelect.value;
             const t = translations[getAppLanguage()] || translations['en'];
 
-            // Validation
             if (!name) {
                 alert(t['nameRequired']);
                 return;
@@ -135,7 +126,6 @@
                 return;
             }
 
-            // Save to Google Sheet and then Redirect
             saveProfileData(name, number, lang);
         });
     </script>

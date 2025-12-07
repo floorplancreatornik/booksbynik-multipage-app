@@ -1,31 +1,19 @@
-/* Basic reset for better PWA feel */
-:root {
-    --primary-color: #2563eb; /* blue-600 */
-    --primary-hover: #1d4ed8; /* blue-700 */
+/* Custom CSS to fix the phone number input alignment */
+/* This rule ensures the country code span matches the input height exactly */
+.custom-country-code-fix {
+    height: 42px; /* Set height explicitly to match py-2 on the input */
+    line-height: 40px; /* Adjust line-height to vertically center the +91 text */
 }
 
-/* Base styles for the bottom navigation bar */
-.nav-button {
-    flex: 1;
-    transition: color 0.2s;
-    padding: 5px 0;
-}
-.nav-button.active {
-    color: var(--primary-color);
-}
-.nav-button:hover {
-    color: var(--primary-hover);
+/* Base styles for dark mode transition (already existing) */
+.dark body {
+    background-color: #1f2937; /* Dark gray background */
 }
 
-/* Dark Mode Overrides (Defined in <style> block of home.html for consistency) */
-body.dark {
-    background-color: #111827; /* gray-900 */
-    color: #f3f4f6; /* gray-100 */
+.dark .bg-white {
+    background-color: #374151; /* Darker background for cards/forms */
 }
-body.dark .card, body.dark .bg-white {
-    background-color: #1f2937; /* gray-800 */
-    border-color: #374151; /* gray-700 */
-}
-body.dark .nav-button.active {
-    color: #60a5fa; /* blue-400 */
+
+.dark .text-gray-700 {
+    color: #d1d5db; /* Light gray text for dark mode */
 }
