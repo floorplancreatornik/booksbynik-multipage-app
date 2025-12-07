@@ -1,21 +1,20 @@
 // ====================================================================
 // script.js: Shared Constants and Global Functions
-// This file is linked by all HTML pages.
+// Core file for APIs, Theme, Auth, and running i18n setup.
 // ====================================================================
 
-// --- 1. GOOGLE APPS SCRIPT API ENDPOINTS ---
-// (These URLs are confirmed for Catalog, Orders, and your new Profile sheet)
+// --- 1. IMPORT i18n Logic ---
+import { applyTranslations, setLanguage, getAppLanguage, translations } from './i18n.js';
+
+// --- 2. GOOGLE APPS SCRIPT API ENDPOINTS ---
 export const API_ENDPOINTS = {
-    // 1. Fetches book data for home.html
-    CATALOG_API_ENDPOINT: "https://script.google.com/macros/s/AKfycbziBJMiEM0s_deX7L8-JFde6FjZXQYVu6J-1cPa7b3KBNhYSOsUz-9Nczo2LcTrUouj0g/exec", 
-    // 2. Submits final order details from checkout.html
+    CATALOG_API_ENDPOINT: "https://script.google.com/macros/s/AKfycbziBJMiEM0s_deX7L8-JFde6FjZXQYVu6J-1cPa7b3KBNhYSOsUz-9Nczo2LcTrUouj0g/exec",
     ORDER_API_ENDPOINT: "https://script.google.com/macros/s/AKfycbwkbb81y8szLipovLlQxDrjfy-y-ETpLNuZjHJXokjm8dKd6Px12HqBrtvbCvEvA-7U/exec",
-    // 3. Saves login/profile name, number, and language (Your new API)
     PROFILE_API_ENDPOINT: "https://script.google.com/macros/s/AKfycbw8kuI-nMHu4do7WIU-nwqiKNWctP0DQkQbCIEd6Tw0AW3Qi6piDAv5xCRHyPRGkP8J/exec"
 };
 
 
-// --- 2. THEME LOGIC (Used by all pages) ---
+// --- 3. THEME LOGIC (Used by all pages) ---
 
 /**
  * Applies the selected theme based on local storage or system preference.
@@ -45,34 +44,6 @@ export function toggleTheme() {
     applyTheme();
 }
 
-// Attach the toggle function to the button when the page loads
-document.addEventListener('DOMContentLoaded', () => {
-    applyTheme();
-    const themeToggle = document.getElementById('themeToggle');
-    if (themeToggle) {
-        themeToggle.addEventListener('click', toggleTheme);
-    }
-});
-
-
-// --- 3. LANGUAGE LOGIC (Used for app interface text, not book data) ---
-
-/**
- * Gets the current app language from local storage, defaults to English.
- * @returns {string} The app language code ('en' or 'ml').
- */
-export function getAppLanguage() {
-    return localStorage.getItem('appLanguage') || 'en';
-}
-
-/**
- * Sets the app language in local storage.
- * @param {string} lang - The language code ('en' or 'ml').
- */
-export function setLanguage(lang) {
-    localStorage.setItem('appLanguage', lang);
-}
-
 
 // --- 4. AUTH GUARD (Simple check before loading protected pages) ---
 
@@ -91,8 +62,24 @@ export function checkLogin() {
     }
 }
 
+// Attach listeners and run initial setup on page load
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme();
+    // NEW: Run the translation logic imported from i18n.js
+    applyTranslations(); 
+    
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+});
+
+
 // Call checkLogin on every page load (except index.html and thankyou.html)
 const path = window.location.pathname;
 if (!path.endsWith('index.html') && !path.endsWith('thankyou.html')) {
     document.addEventListener('DOMContentLoaded', checkLogin);
 }
+
+// Re-export i18n functions/objects needed by other files (e.g., home.html needs translations object)
+export { applyTranslations, setLanguage, getAppLanguage, translations };
