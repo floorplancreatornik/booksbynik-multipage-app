@@ -1,19 +1,18 @@
-/* Custom CSS to fix the phone number input alignment */
-/* This rule ensures the country code span matches the input height exactly */
+/* --- Global Theme Contrast Fix (New) --- */
+
+/* Default text color for Light Mode */
+body {
+    color: #1f2937; /* Deep dark gray for text in light theme */
+}
+
+/* Default text color for Dark Mode and body background */
+.dark body {
+    background-color: #111827; /* Reinforces the deepest gray-900 for body background */
+    color: #f3f4f6; /* Bright light gray for text in dark theme */
+}
+
+/* Custom CSS to fix the phone number input alignment (Kept from previous fix) */
 .custom-country-code-fix {
     height: 42px; /* Set height explicitly to match py-2 on the input */
     line-height: 40px; /* Adjust line-height to vertically center the +91 text */
-}
-
-/* Base styles for dark mode transition (already existing) */
-.dark body {
-    background-color: #1f2937; /* Dark gray background */
-}
-
-.dark .bg-white {
-    background-color: #374151; /* Darker background for cards/forms */
-}
-
-.dark .text-gray-700 {
-    color: #d1d5db; /* Light gray text for dark mode */
 }
