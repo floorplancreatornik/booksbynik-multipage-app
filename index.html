@@ -3,114 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BooksByNIK | Login</title>
+    <title data-i18n="appTitle">BooksByNIK</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
 </head>
+<body class="bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
+    <div class="max-w-md mx-auto p-4 pt-10">
 
-<body class="bg-gray-50 text-gray-900 flex items-center justify-center min-h-screen transition-colors duration-300">
-    <div class="w-full max-w-md p-6 bg-white shadow-xl rounded-lg border border-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700">
-        <h1 class="text-3xl font-bold text-center mb-6">Welcome to BooksByNIK</h1>
-        <p id="authMessage" class="text-center text-sm mb-6 text-gray-500 dark:text-gray-400">Enter your details to access the catalog.</p>
+        <button id="themeToggle" class="absolute top-4 right-4 text-gray-800 dark:text-gray-200 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+            <svg id="sunIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <svg id="moonIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+        </button>
 
-        <form id="loginForm" class="space-y-4">
+        <h1 class="text-3xl font-bold text-center mb-4 dark:text-white" data-i18n="welcome">Welcome to BooksByNIK</h1>
+        <p class="text-center mb-6 dark:text-gray-300" data-i18n="enterDetails">Enter your details to access the catalog.</p>
+
+        <form id="loginForm" class="bg-white dark:bg-gray-700 shadow-md rounded-lg p-6 space-y-4">
             <div>
-                <label for="userName" class="block text-sm font-medium mb-1">Your Name</label>
-                <input type="text" id="userName" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100" placeholder="e.g., NIK Name">
+                <label for="userName" class="block text-sm font-medium text-gray-700 dark:text-gray-300" data-i18n="yourName">Your Name</label>
+                <input type="text" id="userName" name="userName" required
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-800 dark:text-white"
+                    data-i18n-placeholder="enterNamePlaceholder" placeholder="Enter your full official name">
             </div>
+            
             <div>
-                <label for="userNumber" class="block text-sm font-medium mb-1">Phone Number (10 digits)</label>
-                <input type="tel" id="userNumber" required pattern="[0-9]{10}" maxlength="10" class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100" placeholder="e.g., 9876543210">
+                <label for="userNumber" class="block text-sm font-medium text-gray-700 dark:text-gray-300" data-i18n="phoneNumber">Phone Number</label>
+                <div class="flex">
+                    <span class="inline-flex items-center px-3 border border-r-0 border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 rounded-l-md text-sm">
+                        +91
+                    </span>
+                    <input type="tel" id="userNumber" name="userNumber" required pattern="\d{10}" maxlength="10"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-r-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-800 dark:text-white"
+                        data-i18n-placeholder="enterNumberPlaceholder" placeholder="e.g., 9876543210">
+                </div>
             </div>
-
-            <div class="flex justify-between items-center pt-2">
-                <label class="block text-sm font-medium">App Language:</label>
-                <select id="languageSelect" class="p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+            
+            <div>
+                <label for="appLanguage" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" data-i18n="appLanguage">App Language:</label>
+                <select id="appLanguage" name="appLanguage" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
                     <option value="en">English</option>
                     <option value="ml">മലയാളം (Malayalam)</option>
                 </select>
+                <p class="text-xs mt-1 text-gray-500 dark:text-gray-400" data-i18n="languageNote">You can change the language anytime from Profile Settings.</p>
             </div>
 
-            <button type="submit" id="loginButton" class="w-full bg-blue-600 text-white p-3 rounded-md font-semibold hover:bg-blue-700 transition duration-200">
+            <button type="submit" id="loginButton" class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition duration-150" data-i18n="loginButton">
                 Login / Register
             </button>
-            
-            <p id="statusMessage" class="text-center text-sm mt-3 text-red-500 hidden"></p>
         </form>
     </div>
 
     <script type="module">
-        import { API_ENDPOINTS, setLanguage, applyTheme } from './script.js';
+        // --- 🔑 I18N FIX: Import language from i18n.js ---
+        import { API_ENDPOINTS } from './script.js'; 
+        import { setLanguage, applyTranslations, translations, getAppLanguage } from './i18n.js';
+        
+        const loginForm = document.getElementById('loginForm');
+        const userNumberInput = document.getElementById('userNumber');
+        const userNameInput = document.getElementById('userName');
+        const appLanguageSelect = document.getElementById('appLanguage');
+        const loginButton = document.getElementById('loginButton');
 
-        // NOTE: The API_ENDPOINTS is imported from script.js
+        // Function to handle saving user data to the Google Sheet (PROFILE API FIX)
+        async function saveProfileData(name, number, lang) {
+            loginButton.textContent = 'Saving Profile...';
+            loginButton.disabled = true;
 
+            try {
+                const formData = new URLSearchParams();
+                formData.append('action', 'saveProfile'); 
+                formData.append('userName', name);
+                formData.append('userNumber', number);
+                formData.append('appLanguage', lang);
+
+                // Send data to the PROFILE_API_ENDPOINT
+                await fetch(API_ENDPOINTS.PROFILE_API_ENDPOINT, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+
+                // Profile saved successfully (or endpoint received it), proceed to redirect
+                localStorage.setItem('userName', name);
+                localStorage.setItem('userNumber', number);
+                localStorage.setItem('appLanguage', lang);
+
+                window.location.replace('home.html');
+
+            } catch (error) {
+                console.error('API Error: Could not save profile to Google Sheet.', error);
+                
+                // Fallback: Save locally so the user can still use the app
+                localStorage.setItem('userName', name);
+                localStorage.setItem('userNumber', number);
+                localStorage.setItem('appLanguage', lang);
+                
+                alert("Profile saved locally, but error contacting server. Please try again later.");
+                window.location.replace('home.html');
+            }
+        }
+        
+        // Initial setup for the language dropdown based on saved preference
         document.addEventListener('DOMContentLoaded', () => {
-            applyTheme(); // Apply theme before showing page
+            const currentLang = getAppLanguage();
+            appLanguageSelect.value = currentLang;
+            // applyTranslations runs automatically via script.js/i18n.js listener
+        });
+        
+        // Listener to immediately update language preference
+        appLanguageSelect.addEventListener('change', (e) => {
+            setLanguage(e.target.value);
+            applyTranslations(); 
+        });
 
-            const loginForm = document.getElementById('loginForm');
-            const userNameInput = document.getElementById('userName');
-            const userNumberInput = document.getElementById('userNumber');
-            const languageSelect = document.getElementById('languageSelect');
-            const statusMessage = document.getElementById('statusMessage');
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
 
-            // Set language selection based on stored preference
-            languageSelect.value = localStorage.getItem('appLanguage') || 'en';
+            const name = userNameInput.value.trim();
+            const number = userNumberInput.value.trim();
+            const lang = appLanguageSelect.value;
+            const t = translations[getAppLanguage()] || translations['en'];
 
-            languageSelect.addEventListener('change', (e) => {
-                setLanguage(e.target.value);
-            });
+            // Validation
+            if (!name) {
+                alert(t['nameRequired']);
+                return;
+            }
+            if (!number || number.length !== 10) {
+                alert(t['numberRequired']);
+                return;
+            }
 
-            loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                statusMessage.classList.add('hidden');
-                
-                const name = userNameInput.value.trim();
-                const number = userNumberInput.value.trim();
-                const language = languageSelect.value;
-                
-                if (!name || !number || number.length !== 10) {
-                    statusMessage.textContent = "Please enter a valid name and 10-digit number.";
-                    statusMessage.classList.remove('hidden');
-                    return;
-                }
-
-                // Show loading state
-                document.getElementById('loginButton').textContent = 'Processing...';
-                document.getElementById('loginButton').disabled = true;
-
-                try {
-                    const response = await fetch(API_ENDPOINTS.PROFILE_API_ENDPOINT, {
-                        method: 'POST',
-                        mode: 'no-cors', // Important for Apps Script POST when using client-side JS
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: `action=saveProfile&name=${encodeURIComponent(name)}&number=${encodeURIComponent(number)}&language=${language}`
-                    });
-                    
-                    // Since mode: 'no-cors' is used, we cannot read the response status/body,
-                    // so we proceed based on the assumption that the request was sent.
-                    
-                    // Save to local storage for quick access and authentication guard
-                    localStorage.setItem('userName', name);
-                    localStorage.setItem('userNumber', number);
-                    localStorage.setItem('appLanguage', language);
-                    
-                    // Redirect to the home page (catalog)
-                    window.location.replace('home.html');
-
-                } catch (error) {
-                    console.error('API submission failed:', error);
-                    statusMessage.textContent = "Network error. Please try again later.";
-                    statusMessage.classList.remove('hidden');
-
-                    // Restore button state on failure
-                    document.getElementById('loginButton').textContent = 'Login / Register';
-                    document.getElementById('loginButton').disabled = false;
-                }
-            });
+            // Save to Google Sheet and then Redirect
+            saveProfileData(name, number, lang);
         });
     </script>
-    <script type="module" src="script.js"></script>
 </body>
 </html>
