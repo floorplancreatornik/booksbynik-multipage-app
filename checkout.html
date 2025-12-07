@@ -1,0 +1,155 @@
+<script type="module">
+        import { API_ENDPOINTS } from './script.js';
+
+        const orderForm = document.getElementById('orderForm');
+        const finalTotalAmount = document.getElementById('finalTotalAmount');
+        const orderItemsList = document.getElementById('orderItemsList');
+        const payButton = document.getElementById('payButton');
+        const statusMessage = document.getElementById('submissionStatus');
+
+        // Helper function to create UPI string for payment
+        function createUpiIntent(orderId, totalAmount, orderName, upiId, noteDescription) {
+            const encodedName = encodeURIComponent(orderName);
+            const encodedNote = encodeURIComponent(noteDescription);
+            
+            // Standard UPI Intent URL format
+            return `upi://pay?pa=${upiId}&pn=${encodedName}&mc=0000&tid=${orderId}&tr=${orderId}&am=${totalAmount}&cu=INR&tn=${encodedNote}`;
+        }
+
+        function populateForm() {
+            const total = sessionStorage.getItem('orderTotal') || '0.00';
+            finalTotalAmount.textContent = `₹${parseFloat(total).toFixed(2)}`;
+
+            // Use logged in user's details as defaults
+            document.getElementById('orderName').value = localStorage.getItem('userName') || '';
+            document.getElementById('orderNumber').value = localStorage.getItem('userNumber') || '';
+            
+            // Retrieve last used address. We'll split the address to extract the pincode later.
+            document.getElementById('orderAddress').value = localStorage.getItem('userAddress') || ''; 
+
+            // List items for confirmation
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            orderItemsList.innerHTML = '';
+            if (cart.length === 0) {
+                orderItemsList.innerHTML = `<p class="text-red-500">Cart is empty. Returning to cart...</p>`;
+                setTimeout(() => window.location.replace('cart.html'), 1000);
+                return;
+            }
+            
+            cart.forEach(item => {
+                const li = document.createElement('p');
+                li.textContent = `${item.quantity}x ${item.title} (₹${(item.price * item.quantity).toFixed(2)})`;
+                orderItemsList.appendChild(li);
+            });
+        }
+
+        async function submitOrder(orderData) {
+            statusMessage.classList.add('hidden');
+            payButton.textContent = 'Submitting Order to Server...';
+            payButton.disabled = true;
+
+            // --- 1. Submission to Apps Script (Unchanged) ---
+            try {
+                const formData = new URLSearchParams();
+                formData.append('action', 'submitOrder');
+                formData.append('userName', orderData.name);
+                formData.append('userNumber', orderData.number);
+                formData.append('userAddress', orderData.address);
+                formData.append('orderId', orderData.orderId);
+                formData.append('totalAmount', orderData.total);
+                formData.append('orderDetails', JSON.stringify(orderData.items));
+                
+                await fetch(API_ENDPOINTS.ORDER_API_ENDPOINT, {
+                    method: 'POST',
+                    mode: 'no-cors', 
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+                
+                statusMessage.textContent = 'Order submitted successfully. Redirecting to UPI...';
+                statusMessage.classList.remove('hidden');
+                statusMessage.classList.remove('text-red-500');
+                statusMessage.classList.add('text-green-600');
+
+                // --- 2. Initiate Payment Intent (Modified) ---
+                
+                // Construct the highly specific transaction note
+                const itemCodes = orderData.items.map(item => `${item.id}-${item.qty}`).join(',');
+                
+                // Simple attempt to extract a 6-digit pincode from the end of the address string
+                const pincodeMatch = orderData.address.match(/\d{6}$/);
+                const pincode = pincodeMatch ? pincodeMatch[0] : '000000'; // Default if not found
+
+                // **FORMAT:** bookcode|phonenumber|pincode|full name with space
+                const transactionNote = `${itemCodes}|${orderData.number}|${pincode}|${orderData.name}`;
+
+
+                const upiId = 'NIK-UPI-ID@bank'; // <--- **REMINDER: CHANGE THIS TO YOUR UPI ID**
+                
+                const upiURL = createUpiIntent(
+                    orderData.orderId, 
+                    orderData.total, 
+                    orderData.name, 
+                    upiId, 
+                    transactionNote // Pass the custom note
+                );
+
+                // Clear cart and prepare for redirect
+                localStorage.removeItem('cart'); 
+                sessionStorage.setItem('lastOrderId', orderData.orderId);
+
+                setTimeout(() => {
+                    // Attempt the UPI deep link redirect
+                    window.location.href = upiURL;
+                    
+                    // Fallback: If UPI app fails to launch, go to Thank You page anyway.
+                    setTimeout(() => {
+                        window.location.replace('thankyou.html');
+                    }, 2000); 
+
+                }, 1000); 
+
+            } catch (error) {
+                console.error('Order Submission Error:', error);
+                statusMessage.textContent = "Error submitting order or network issue.";
+                statusMessage.classList.remove('hidden');
+                statusMessage.classList.add('text-red-500');
+                payButton.textContent = 'Pay Now via UPI';
+                payButton.disabled = false;
+            }
+        }
+
+
+        orderForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const total = sessionStorage.getItem('orderTotal');
+            const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
+            
+            if (!total || cartItems.length === 0) {
+                alert('Cart is empty or total is missing. Please return to cart.');
+                window.location.replace('cart.html');
+                return;
+            }
+
+            const name = document.getElementById('orderName').value.trim();
+            const number = document.getElementById('orderNumber').value.trim();
+            const address = document.getElementById('orderAddress').value.trim();
+
+            const orderData = {
+                orderId: 'ORD-' + Date.now(), 
+                total: parseFloat(total).toFixed(2),
+                name: name,
+                number: number,
+                address: address,
+                // Format items as an array of objects: [{id: 'B001', qty: 1}, ...]
+                items: cartItems.map(item => ({ id: item.id, qty: item.quantity }))
+            };
+
+            localStorage.setItem('userAddress', address); 
+
+            submitOrder(orderData);
+        });
+
+        document.addEventListener('DOMContentLoaded', populateForm);
+    </script>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BooksByNIK | Thank You</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+
+<body class="bg-gray-50 text-gray-900 flex items-center justify-center min-h-screen transition-colors duration-300">
+    
+    <div class="w-full max-w-lg p-8 bg-white dark:bg-gray-800 shadow-2xl rounded-lg border-t-8 border-green-500 dark:border-green-400 text-center">
+        
+        <svg class="h-20 w-20 text-green-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+
+        <h1 class="text-3xl font-bold mb-3">Thank You for Your Order!</h1>
+        <p class="text-gray-700 dark:text-gray-300 mb-6">Your order has been successfully placed and is being processed.</p>
+
+        <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-md inline-block">
+            <p class="text-sm font-medium">Your Order ID:</p>
+            <p id="orderIdDisplay" class="text-xl font-extrabold text-blue-600 dark:text-blue-400">#N/A</p>
+        </div>
+
+        <div class="mt-8 space-y-4">
+            <a href="home.html" class="w-full block bg-blue-600 text-white p-3 rounded-md font-semibold hover:bg-blue-700 transition">
+                Continue Shopping
+            </a>
+            <a href="profile.html" class="w-full block bg-gray-300 text-gray-800 p-3 rounded-md font-semibold hover:bg-gray-400 transition">
+                View Profile
+            </a>
+        </div>
+    </div>
+
+    <script type="module">
+        document.addEventListener('DOMContentLoaded', () => {
+            const orderIdDisplay = document.getElementById('orderIdDisplay');
+            // Get the Order ID saved in session storage from the checkout page
+            const lastOrderId = sessionStorage.getItem('lastOrderId'); 
+
+            if (lastOrderId) {
+                orderIdDisplay.textContent = lastOrderId;
+                sessionStorage.removeItem('lastOrderId'); // Clean up session storage
+            }
+        });
+    </script>
+    <script type="module" src="script.js"></script>
+</body>
+</html>

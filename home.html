@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BooksByNIK | Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        /* Dark Mode Specific Styles defined here for simple PWA setup */
+        body.dark {
+            @apply bg-gray-900 text-gray-100;
+        }
+        body.dark .card {
+            @apply bg-gray-800 shadow-xl border-gray-700;
+        }
+        body.dark .nav-button {
+            @apply text-gray-400 hover:text-white;
+        }
+        body.dark .nav-button.active {
+            @apply text-white;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 min-h-screen pb-20 transition-colors duration-300">
+    
+    <header class="sticky top-0 bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center z-40">
+        <h1 class="text-xl font-bold">📚 Catalog</h1>
+        
+        <button id="themeToggle" class="p-2 rounded-full bg-gray-100 dark:bg-gray-700 shadow-sm text-gray-800 dark:text-gray-200">
+            <svg id="moonIcon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+            <svg id="sunIcon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+        </button>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div id="catalogList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <p id="loadingMessage" class="text-center text-lg col-span-full">Loading catalog...</p>
+        </div>
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 shadow-2xl border-t border-gray-200 dark:border-gray-700 z-50">
+        <div class="flex justify-around h-full items-center">
+            <a href="home.html" class="nav-button flex flex-col items-center justify-center text-blue-600 dark:text-blue-400 active">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-1v-1a1 1 0 00-1-1h-3m-6 0h6m-6 0h.01M17 12h-6"></path></svg>
+                <span class="text-xs">Home</span>
+            </a>
+            <a href="cart.html" class="nav-button flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:text-blue-600">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17M17 17a1 1 0 100 2 1 1 0 000-2zm-6 0a1 1 0 100 2 1 1 0 000-2z"></path></svg>
+                <span class="text-xs">Cart</span>
+            </a>
+            <a href="profile.html" class="nav-button flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:text-blue-600">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c4.418 0 8 1.79 8 4v2H4v-2c0-2.21 3.582-4 8-4z"></path></svg>
+                <span class="text-xs">Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <script type="module">
+        import { API_ENDPOINTS } from './script.js';
+
+        const catalogList = document.getElementById('catalogList');
+        const loadingMessage = document.getElementById('loadingMessage');
+
+        async function fetchCatalog() {
+            try {
+                const response = await fetch(API_ENDPOINTS.CATALOG_API_ENDPOINT + "?action=catalog");
+                const books = await response.json();
+
+                loadingMessage.classList.add('hidden');
+                
+                if (!books || books.error || books.length === 0) {
+                    catalogList.innerHTML = `<p class="text-center text-red-500 col-span-full">Error loading catalog or no books found.</p>`;
+                    return;
+                }
+
+                books.forEach(book => {
+                    const card = createBookCard(book);
+                    catalogList.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error('Fetch Error:', error);
+                loadingMessage.classList.add('hidden');
+                catalogList.innerHTML = `<p class="text-center text-red-500 col-span-full">Network error. Please check API link.</p>`;
+            }
+        }
+
+        function createBookCard(book) {
+            const card = document.createElement('div');
+            card.className = 'card bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition duration-300 hover:shadow-xl';
+            
+            card.innerHTML = `
+                <img src="${book['Cover URL'] || 'placeholder.png'}" alt="${book.Title || 'Book Cover'}" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h2 class="text-lg font-semibold truncate">${book.Title || 'Untitled Book'}</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">${book.Author || 'Unknown Author'}</p>
+                    <p class="text-xl font-bold text-blue-600 dark:text-blue-400 mb-4">₹${book.Price || 'N/A'}</p>
+                    <button data-book-id="${book['Book ID']}" class="view-details w-full block text-center bg-black text-white py-2 rounded-md hover:bg-gray-700 dark:bg-blue-600 dark:hover:bg-blue-700 transition duration-200 text-sm font-medium">
+                        View Details
+                    </button>
+                </div>
+            `;
+            
+            // Use event delegation or listener for navigation
+            const button = card.querySelector('.view-details');
+            button.addEventListener('click', () => {
+                window.location.href = `catalog.html?id=${book['Book ID']}`;
+            });
+            
+            return card;
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchCatalog);
+    </script>
+    <script type="module" src="script.js"></script>
+</body>
+</html>

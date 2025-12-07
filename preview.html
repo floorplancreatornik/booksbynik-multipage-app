@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BooksByNIK | Preview</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-black dark:bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen transition-colors duration-300">
+    
+    <a href="javascript:history.back()" class="fixed top-4 right-4 text-white p-2 rounded-full bg-gray-700 hover:bg-gray-600 z-50">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </a>
+
+    <div class="p-4 flex items-center justify-center h-full w-full">
+        <img id="bookImage" src="placeholder.png" alt="Book Cover Preview" class="max-w-full max-h-screen object-contain" />
+    </div>
+
+    <p id="loadingMessage" class="text-center text-lg mt-4">Loading image...</p>
+    
+    <script type="module">
+        import { API_ENDPOINTS } from './script.js';
+
+        const bookImage = document.getElementById('bookImage');
+        const loadingMessage = document.getElementById('loadingMessage');
+
+        function getBookIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        async function fetchImageURL(bookId) {
+            try {
+                const url = `${API_ENDPOINTS.CATALOG_API_ENDPOINT}?action=bookDetails&id=${encodeURIComponent(bookId)}`;
+                const response = await fetch(url);
+                const book = await response.json();
+
+                loadingMessage.classList.add('hidden');
+
+                if (!book || book.error || !book['Cover URL']) {
+                    bookImage.src = 'placeholder.png';
+                    alert("Image not found.");
+                    return;
+                }
+                
+                bookImage.src = book['Cover URL'];
+                
+            } catch (error) {
+                console.error('Fetch Error:', error);
+                loadingMessage.textContent = 'Error loading image.';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const bookId = getBookIdFromUrl();
+            if (bookId) {
+                fetchImageURL(bookId);
+            } else {
+                loadingMessage.textContent = 'No book ID provided.';
+            }
+        });
+    </script>
+</body>
+</html>

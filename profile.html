@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BooksByNIK | Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+
+<body class="bg-gray-50 text-gray-900 min-h-screen pb-20 transition-colors duration-300">
+    
+    <header class="sticky top-0 bg-white dark:bg-gray-800 shadow-md p-4 flex justify-start items-center z-40">
+        <h1 class="text-xl font-bold">👤 My Profile</h1>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 space-y-6">
+            
+            <div>
+                <h2 class="text-2xl font-bold border-b pb-2 mb-4">Account Details</h2>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center p-3 bg-gray-100 dark:bg-gray-700 rounded-md">
+                        <span class="font-medium">Name:</span>
+                        <span id="profileName" class="text-gray-700 dark:text-gray-300 font-semibold">N/A</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-gray-100 dark:bg-gray-700 rounded-md">
+                        <span class="font-medium">Phone Number:</span>
+                        <span id="profileNumber" class="text-gray-700 dark:text-gray-300 font-semibold">N/A</span>
+                    </div>
+                    <p class="text-sm text-red-500 pt-2">
+                        *To change Name or Number, you must **Log Out** and re-login.
+                    </p>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-2xl font-bold border-b pb-2 mb-4">App Settings</h2>
+                <div class="flex justify-between items-center p-3 bg-gray-100 dark:bg-gray-700 rounded-md">
+                    <label for="profileLanguageSelect" class="font-medium">Select Language:</label>
+                    <select id="profileLanguageSelect" class="p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+                        <option value="en">English</option>
+                        <option value="ml">മലയാളം (Malayalam)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-2xl font-bold border-b pb-2 mb-4">Connect with NIK</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <a href="https://wa.me/91XXXXXXXXXX" target="_blank" class="flex items-center justify-center p-3 bg-green-500 text-white rounded-md hover:bg-green-600 transition">
+                        <span class="font-semibold">WhatsApp</span>
+                    </a>
+                    <a href="mailto:youremail@example.com" class="flex items-center justify-center p-3 bg-red-500 text-white rounded-md hover:bg-red-600 transition">
+                        <span class="font-semibold">Email</span>
+                    </a>
+                </div>
+            </div>
+
+            <button id="logoutButton" class="w-full bg-gray-600 text-white p-3 rounded-md font-semibold hover:bg-gray-700 transition duration-200 mt-4">
+                Log Out
+            </button>
+        </div>
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 shadow-2xl border-t border-gray-200 dark:border-gray-700 z-50">
+        <div class="flex justify-around h-full items-center">
+            <a href="home.html" class="nav-button flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:text-blue-600">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-1v-1a1 1 0 00-1-1h-3m-6 0h6m-6 0h.01M17 12h-6"></path></svg>
+                <span class="text-xs">Home</span>
+            </a>
+            <a href="cart.html" class="nav-button flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:text-blue-600">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17M17 17a1 1 0 100 2 1 1 0 000-2zm-6 0a1 1 0 100 2 1 1 0 000-2z"></path></svg>
+                <span class="text-xs">Cart</span>
+            </a>
+            <a href="profile.html" class="nav-button flex flex-col items-center justify-center text-blue-600 dark:text-blue-400 active">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c4.418 0 8 1.79 8 4v2H4v-2c0-2.21 3.582-4 8-4z"></path></svg>
+                <span class="text-xs">Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <script type="module">
+        import { setLanguage, getAppLanguage } from './script.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileName = document.getElementById('profileName');
+            const profileNumber = document.getElementById('profileNumber');
+            const languageSelect = document.getElementById('profileLanguageSelect');
+            const logoutButton = document.getElementById('logoutButton');
+
+            // 1. Populate Profile Info
+            profileName.textContent = localStorage.getItem('userName') || 'Not Logged In';
+            profileNumber.textContent = localStorage.getItem('userNumber') || 'N/A';
+            
+            // 2. Set initial Language
+            languageSelect.value = getAppLanguage();
+
+            // 3. Language Change Listener
+            languageSelect.addEventListener('change', (e) => {
+                setLanguage(e.target.value);
+                alert(`Language set to ${e.target.value}. Refreshing page...`);
+                window.location.reload(); 
+            });
+
+            // 4. Logout Handler
+            logoutButton.addEventListener('click', () => {
+                if (confirm('Are you sure you want to log out?')) {
+                    localStorage.removeItem('userName');
+                    localStorage.removeItem('userNumber');
+                    localStorage.removeItem('cart'); // Clear cart on logout
+                    // Keep appLanguage setting if user wants it
+                    window.location.replace('index.html');
+                }
+            });
+        });
+    </script>
+    <script type="module" src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+/* Basic reset for better PWA feel */
+:root {
+    --primary-color: #2563eb; /* blue-600 */
+    --primary-hover: #1d4ed8; /* blue-700 */
+}
+
+/* Base styles for the bottom navigation bar */
+.nav-button {
+    flex: 1;
+    transition: color 0.2s;
+    padding: 5px 0;
+}
+.nav-button.active {
+    color: var(--primary-color);
+}
+.nav-button:hover {
+    color: var(--primary-hover);
+}
+
+/* Dark Mode Overrides (Defined in <style> block of home.html for consistency) */
+body.dark {
+    background-color: #111827; /* gray-900 */
+    color: #f3f4f6; /* gray-100 */
+}
+body.dark .card, body.dark .bg-white {
+    background-color: #1f2937; /* gray-800 */
+    border-color: #374151; /* gray-700 */
+}
+body.dark .nav-button.active {
+    color: #60a5fa; /* blue-400 */
+}
