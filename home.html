@@ -1,141 +1,219 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="catalog">Catalog</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-    <div class="container mx-auto p-4 pb-20">
-        <header class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold dark:text-white" data-i18n="catalog">Catalog</h1>
-            <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-                <svg id="sunIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                <svg id="moonIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-            </button>
-        </header>
+    <title>BooksByNIK - Catalog</title>
+    <link rel="stylesheet" href="style.css">
+    </head>
+<body>
 
-        <input type="text" id="searchBar" placeholder="Search books..." 
-               class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg mb-6 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-green-500 focus:border-green-500">
+    <header>
+        <div class="logo">BooksByNIK</div>
+        <nav>
+            <a href="home.html" data-i18n="catalog">Catalog</a>
+            <a href="cart.html" data-i18n="cart">Cart</a>
+            <a href="profile.html" data-i18n="profile">Profile</a>
+        </nav>
+        
+        <div class="header-controls">
+            <select id="lang-selector">
+                <option value="en">English</option>
+                <option value="ml">മലയാളം (Malayalam)</option>
+            </select>
 
-        <p id="loadingIndicator" class="text-center text-lg font-semibold text-gray-500 dark:text-gray-400">Loading catalog...</p>
+            <label class="switch">
+                <input type="checkbox" id="theme-toggle">
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </header>
 
-        <div id="catalogList" class="space-y-4">
-            </div>
-    </div>
+    <main>
+        <section class="search-filter-bar">
+            <input type="text" id="search-input" placeholder="Search books..." data-i18n="search">
+            
+            <div class="filters">
+                <label for="language-filter" data-i18n="languageTitle">Language:</label>
+                <select id="language-filter">
+                    <option value="all" data-i18n="allLanguages">All</option>
+                    <option value="Malayalam" data-i18n="malayalam">Malayalam</option>
+                    <option value="English" data-i18n="english">English</option>
+                </select>
+                </div>
+        </section>
 
-    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-lg flex justify-around p-3">
-        <a href="home.html" class="flex flex-col items-center text-green-600 dark:text-green-400 font-medium">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
-            <span class="text-xs" data-i18n="catalog">Catalog</span>
-        </a>
-        <a href="cart.html" class="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zm-2.17-2l.4-2h4.72c.42 0 .78-.29.93-.72l.96-3.15c.15-.46-.01-.97-.37-1.25a.996.996 0 00-.56-.18H7.13l-.15-.42C6.44 5.78 5.6 5 4.65 5H3c-.55 0-1 .45-1 1s.45 1 1 1h1.65l3.67 11.59c.25.79.99 1.41 1.91 1.41h10c.55 0 1-.45 1-1s-.45-1-1-1H8.87a.998.998 0 00-.32.07c-.16.05-.32.07-.48.07H7z"></path></svg>
-            <span class="text-xs" data-i18n="cartTitle">Cart</span>
-        </a>
-        <a href="profile.html" class="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>
-            <span class="text-xs" data-i18n="myProfile">Profile</span>
-        </a>
-    </nav>
-    
-    <script type="module" src="script.js"></script>
+        <section class="catalog-section">
+            
+            <div id="catalog-list" class="catalog-grid">
+                </div>
+
+            <div id="loader" style="display: none; text-align: center; margin: 20px 0;">
+                <p>Loading more books...</p>
+                </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 BooksByNIK. All rights reserved.</p>
+    </footer>
+
     <script type="module">
-        import { API_ENDPOINTS, toggleTheme, initializeTheme, checkAuth } from './script.js';
-        import { applyTranslations, translations, getAppLanguage } from './i18n.js';
-        
-        checkAuth();
-        
-        const catalogList = document.getElementById('catalogList');
-        const searchBar = document.getElementById('searchBar');
-        const loadingIndicator = document.getElementById('loadingIndicator');
+        // Import necessary utilities from the main script file
+        import { API_ENDPOINTS, formatCurrency, getCoverImageUrl, getTranslation } from './script.js';
 
-        // --- Catalog Rendering Logic (FIXED) ---
-        function renderCatalog(catalogData) {
-            const t = translations[getAppLanguage()] || translations['en'];
-            catalogList.innerHTML = '';
-            loadingIndicator.classList.add('hidden');
+        // --- Global State Variables for Pagination ---
+        let offset = 0;             // Start at the beginning
+        const limit = 10;           // Number of books to fetch per request
+        let hasMore = true;         // Flag to stop fetching when all data is loaded
+        let isFetching = false;     // Flag to prevent multiple concurrent API calls
 
-            if (!catalogData || catalogData.length === 0) {
-                catalogList.innerHTML = `<p class="text-center dark:text-gray-400">No books found in the catalog.</p>`;
-                return;
-            }
+        // --- DOM Element Reference ---
+        const catalogList = document.getElementById('catalog-list');
+        const loader = document.getElementById('loader');
 
-            catalogData.forEach(book => {
-                const bookHtml = `
-                    <div class="book-item flex bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden cursor-pointer transform hover:scale-[1.02] transition duration-300" 
-                         data-id="${book.id}" data-title="${book.title || t.untitledBook}" data-author="${book.author || t.unknownAuthor}">
-                        
-                        <div class="w-24 h-32 flex-shrink-0 bg-gray-200 dark:bg-gray-700 flex items-center justify-center relative">
-                            <img src="${book.imageUrl || 'placeholder.jpg'}" alt="${book.title || t.untitledBook}" onerror="this.onerror=null;this.src='placeholder.jpg';" class="object-cover w-full h-full">
-                        </div>
+        // ====================================================================
+        // A. Rendering Functions
+        // ====================================================================
 
-                        <div class="p-3 flex flex-col justify-between flex-grow">
-                            <div>
-                                <h3 class="text-lg font-semibold dark:text-white">${book.title || t.untitledBook}</h3>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">${book.author || t.unknownAuthor}</p>
-                            </div>
-                            <div class="mt-2 flex justify-between items-center">
-                                <span class="text-xl font-bold text-green-600 dark:text-green-400">₹${book.price ? parseFloat(book.price).toFixed(2) : 'N/A'}</span>
-                                <a href="catalog.html?id=${book.id}" class="text-sm text-blue-600 dark:text-blue-400 hover:underline" data-i18n="viewDetails">
-                                    ${t.viewDetails}
-                                </a>
-                            </div>
+        /**
+         * Creates the HTML markup for a single book card.
+         */
+        function createBookCard(book) {
+            const isbnClean = String(book.isbn || '').replace(/-/g, '').trim();
+            
+            // Split the comma-separated cover string to get the main cover (cover1)
+            // The 'cover' field is the comma-separated list of image filenames
+            const coverFilenames = book.cover ? book.cover.split(',').map(f => f.trim()) : [];
+            const mainCoverFilename = coverFilenames[0]; // Take the first image as the main cover
+            const coverUrl = getCoverImageUrl(mainCoverFilename);
+
+            // Use a placeholder if no image URL is available
+            const imageUrl = coverUrl || './placeholder.jpg'; 
+
+            return `
+                <div class="book-card" data-isbn="${isbnClean}">
+                    <div class="book-cover-container">
+                        <img src="${imageUrl}" alt="${book.title}" class="book-cover" loading="lazy">
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">${book.title || 'N/A'}</h3>
+                        <p class="book-author">${getTranslation('author') || 'Author'}: ${book.author || 'N/A'}</p>
+                        <p class="book-price">${formatCurrency(book.price)}</p>
+                        <div class="card-actions">
+                            <a href="preview.html?isbn=${isbnClean}" class="button view-details-button" data-i18n="viewDetails">${getTranslation('viewDetails')}</a>
+                            <button class="button add-to-cart-button" data-i18n="addToCart">${getTranslation('addToCart')}</button>
                         </div>
                     </div>
-                `;
-                catalogList.insertAdjacentHTML('beforeend', bookHtml);
-            });
+                </div>
+            `;
         }
-        
-        async function fetchCatalog() {
-            loadingIndicator.classList.remove('hidden');
+
+        /**
+         * Renders the fetched books to the catalog list.
+         */
+        function renderCatalogChunk(books) {
+            if (books.length === 0 && offset === 0) {
+                // Only show 'No books found' if this is the first load and it's empty
+                catalogList.innerHTML = `<p class="empty-message" data-i18n="noBooksFound">${getTranslation('noBooksFound')}</p>`;
+                return;
+            }
+            
+            // Append the new chunk of books
+            const fragment = document.createDocumentFragment();
+            books.forEach(book => {
+                const div = document.createElement('div');
+                div.innerHTML = createBookCard(book);
+                fragment.appendChild(div.firstChild);
+            });
+            catalogList.appendChild(fragment);
+            
+            // After appending, update the offset for the next fetch
+            offset += books.length;
+        }
+
+
+        // ====================================================================
+        // B. Data Fetching and Infinite Scroll Logic
+        // ====================================================================
+
+        /**
+         * Fetches a chunk of catalog data from the Google Apps Script API.
+         */
+        async function fetchCatalog(reset = false) {
+            if(reset) {
+                // Allows language switcher or filters to trigger a full refresh
+                offset = 0;
+                hasMore = true;
+                isFetching = false;
+                catalogList.innerHTML = '';
+            }
+
+            if (!hasMore || isFetching) return; // Prevent unnecessary fetches
+
+            isFetching = true;
+            loader.style.display = 'block'; // Show loader
+
             try {
-                // Fetch data from Google Apps Script
-                const response = await fetch(API_ENDPOINTS.CATALOG_API_ENDPOINT);
+                // Construct the URL with pagination parameters
+                const url = `${API_ENDPOINTS.CATALOG_API_ENDPOINT}?limit=${limit}&offset=${offset}`;
                 
-                // CRITICAL FIX: Google Apps Script returns text/html, not application/json by default.
-                // We read text first, then parse it as JSON.
-                const rawText = await response.text();
-                const data = JSON.parse(rawText);
-
-                if (!response.ok && !data) {
-                    throw new Error('Network response was not ok or data is empty.');
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
-                // Assuming the data is an array of book objects
-                renderCatalog(data);
 
+                const result = await response.json();
+                
+                // --- API Response Check ---
+                if (result.error) {
+                    console.error('API Error:', result.error);
+                    // Handle API error display to user
+                    return;
+                }
+
+                const books = result.data || [];
+                hasMore = result.hasMore;
+                
+                // Render the new chunk of books to the page
+                renderCatalogChunk(books);
+                
             } catch (error) {
-                console.error('Error fetching catalog:', error);
-                loadingIndicator.textContent = 'Failed to load catalog. Check API connection and CORS setup.';
-                loadingIndicator.classList.remove('hidden');
+                console.error('Failed to load catalog:', error);
+                if (offset === 0) {
+                    // Show error message only on initial load failure
+                    catalogList.innerHTML = `<p class="error-message">Failed to load catalog. Please check API URL and network connection.</p>`;
+                }
+            } finally {
+                isFetching = false;
+                loader.style.display = 'none'; // Hide loader
             }
         }
-        // --- End Catalog Rendering Logic ---
+
+        /**
+         * Checks if the user has scrolled near the bottom of the page.
+         */
+        function handleScroll() {
+            // Check if the bottom of the document is within 1000 pixels of the current viewport
+            const scrollThreshold = 1000; 
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - scrollThreshold) {
+                fetchCatalog(); // Fetch more data
+            }
+        }
+
+        // ====================================================================
+        // C. Initialization
+        // ====================================================================
+
+        // Expose fetchCatalog globally so the language switcher can trigger a reload
+        window.fetchCatalog = fetchCatalog;
 
         document.addEventListener('DOMContentLoaded', () => {
-            initializeTheme();
-            applyTranslations();
-            fetchCatalog(); // Execute the fetch function
-        });
-
-        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-        
-        searchBar.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const items = catalogList.querySelectorAll('.book-item');
-            items.forEach(item => {
-                const title = item.getAttribute('data-title').toLowerCase();
-                const author = item.getAttribute('data-author').toLowerCase();
-                if (title.includes(searchTerm) || author.includes(searchTerm)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
+            // Start the initial load of the catalog
+            fetchCatalog();
+            
+            // Add the event listener for infinite scroll
+            window.addEventListener('scroll', handleScroll);
         });
     </script>
 </body>
