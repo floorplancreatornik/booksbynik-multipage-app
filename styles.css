@@ -1,18 +1,311 @@
-/* --- Global Theme Contrast Fix (New) --- */
+/* ========================================================== */
+/* 1. Global Reset and Theme Variables                        */
+/* ========================================================== */
 
-/* Default text color for Light Mode */
+/* Use box-sizing for easier layout calculations */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+:root {
+    /* Light Theme Defaults */
+    --color-bg: #ffffff;
+    --color-text: #1f2937;
+    --color-primary: #3b82f6; /* Blue for primary actions/links */
+    --color-secondary: #f3f4f6; /* Light gray for backgrounds/cards */
+    --color-shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Theme Variables (applied when [data-theme="dark"] is set on <html>) */
+html[data-theme="dark"] {
+    --color-bg: #111827;
+    --color-text: #f3f4f6;
+    --color-primary: #60a5fa; /* Lighter blue for dark theme contrast */
+    --color-secondary: #1f2937;
+    --color-shadow: rgba(255, 255, 255, 0.1);
+}
+
 body {
-    color: #1f2937; /* Deep dark gray for text in light theme */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh; /* Ensures footer is at the bottom */
+    display: flex;
+    flex-direction: column;
 }
 
-/* Default text color for Dark Mode and body background */
-.dark body {
-    background-color: #111827; /* Reinforces the deepest gray-900 for body background */
-    color: #f3f4f6; /* Bright light gray for text in dark theme */
+main {
+    flex-grow: 1; /* Pushes the footer down */
+    padding: 20px;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
 }
 
-/* Custom CSS to fix the phone number input alignment (Kept from previous fix) */
-.custom-country-code-fix {
-    height: 42px; /* Set height explicitly to match py-2 on the input */
-    line-height: 40px; /* Adjust line-height to vertically center the +91 text */
+/* ========================================================== */
+/* 2. Header and Navigation Styles                            */
+/* ========================================================== */
+
+header {
+    background-color: var(--color-secondary);
+    color: var(--color-text);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px var(--color-shadow);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+nav a {
+    color: var(--color-text);
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: 500;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* ========================================================== */
+/* 3. Login Page Specific Styles (index.html)                 */
+/* ========================================================== */
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.login-card {
+    background-color: var(--color-secondary);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--color-shadow);
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+}
+
+.login-card h1 {
+    color: var(--color-primary);
+    margin-bottom: 5px;
+}
+
+.login-card h2 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+#login-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+}
+
+#login-button {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 100%;
+}
+
+#login-button:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+/* ========================================================== */
+/* 4. Catalog Grid Layout (home.html)                         */
+/* ========================================================== */
+
+.catalog-grid {
+    display: grid;
+    /* Responsive layout: 2 columns by default, 3 on larger screens */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    padding-top: 20px;
+}
+
+.book-card {
+    background-color: var(--color-secondary);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px var(--color-shadow);
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+}
+
+.book-cover-container {
+    height: 300px; /* Fixed height for image consistency */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.book-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures image fills the container without distortion */
+}
+
+.book-info {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-title {
+    font-size: 1.1rem;
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: var(--color-primary);
+}
+
+.book-author, .book-price {
+    margin: 3px 0;
+    font-size: 0.9rem;
+}
+
+.book-price {
+    font-weight: bold;
+    color: #e04e4e; /* Use a distinct color for price */
+}
+
+.card-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.button {
+    flex: 1;
+    padding: 8px;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.view-details-button {
+    background-color: #5a5a5a;
+    color: white;
+}
+
+.add-to-cart-button {
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.add-to-cart-button:hover {
+    background-color: #2563eb;
+}
+
+/* ========================================================== */
+/* 5. Theme Toggle Switch (Recreated from standard design)    */
+/* ========================================================== */
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 45px;
+    height: 25px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background-color: var(--color-primary);
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 25px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* Dark mode slider contrast */
+html[data-theme="dark"] .slider {
+    background-color: #4b5563; /* Darker gray background */
+}
+
+html[data-theme="dark"] .slider:before {
+    background-color: #f3f4f6; /* Light slider circle */
+}
+
+/* ========================================================== */
+/* 6. Footer and Utility Styles                               */
+/* ========================================================== */
+
+footer {
+    padding: 10px;
+    text-align: center;
+    font-size: 0.8rem;
+    margin-top: auto;
+    background-color: var(--color-secondary);
+    color: var(--color-text);
 }

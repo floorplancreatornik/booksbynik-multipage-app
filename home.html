@@ -4,24 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BooksByNIK - Catalog</title>
-    <link rel="stylesheet" href="style.css">
-    </head>
+    <link rel="stylesheet" href="styles.css"> 
+</head>
 <body>
 
     <header>
         <div class="logo">BooksByNIK</div>
         <nav>
-            <a href="home.html" data-i18n="catalog">Catalog</a>
+            <a href="#" data-i18n="catalog">Catalog</a>
             <a href="cart.html" data-i18n="cart">Cart</a>
             <a href="profile.html" data-i18n="profile">Profile</a>
         </nav>
-        
         <div class="header-controls">
+            <label for="lang-selector" data-i18n="languageTitle">Language:</label>
             <select id="lang-selector">
                 <option value="en">English</option>
-                <option value="ml">മലയാളം (Malayalam)</option>
+                <option value="ml">മലയാളം</option>
             </select>
-
+            
             <label class="switch">
                 <input type="checkbox" id="theme-toggle">
                 <span class="slider round"></span>
@@ -30,79 +30,71 @@
     </header>
 
     <main>
-        <section class="search-filter-bar">
-            <input type="text" id="search-input" placeholder="Search books..." data-i18n="search">
-            
-            <div class="filters">
-                <label for="language-filter" data-i18n="languageTitle">Language:</label>
-                <select id="language-filter">
-                    <option value="all" data-i18n="allLanguages">All</option>
-                    <option value="Malayalam" data-i18n="malayalam">Malayalam</option>
-                    <option value="English" data-i18n="english">English</option>
-                </select>
-                </div>
-        </section>
+        <h1><span data-i18n="catalog">Catalog</span></h1>
+        
+        <div class="filter-bar">
+            <input type="search" id="search-input" data-i18n="search" placeholder="Search books...">
+        </div>
 
-        <section class="catalog-section">
-            
-            <div id="catalog-list" class="catalog-grid">
-                </div>
+        <section id="catalog-container" class="catalog-grid">
+            </section>
+        
+        <div id="loading-indicator" style="text-align: center; padding: 20px; display: none;">
+            Loading more books...
+        </div>
+        
+        <div id="end-of-results" style="text-align: center; padding: 20px; display: none;">
+            --- End of Catalog ---
+        </div>
 
-            <div id="loader" style="display: none; text-align: center; margin: 20px 0;">
-                <p>Loading more books...</p>
-                </div>
-        </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 BooksByNIK. All rights reserved.</p>
+        &copy; 2025 BooksByNIK. All rights reserved.
     </footer>
 
     <script type="module">
-        // Import necessary utilities from the main script file
-        import { API_ENDPOINTS, formatCurrency, getCoverImageUrl, getTranslation } from './script.js';
+        // Import necessary components and constants from the central script
+        import { 
+            API_ENDPOINTS, 
+            getCoverImageUrl, 
+            formatCurrency, 
+            getTranslation, 
+            splitImages 
+        } from './script.js';
 
-        // --- Global State Variables for Pagination ---
-        let offset = 0;             // Start at the beginning
-        const limit = 10;           // Number of books to fetch per request
-        let hasMore = true;         // Flag to stop fetching when all data is loaded
-        let isFetching = false;     // Flag to prevent multiple concurrent API calls
+        // State variables for infinite scroll
+        let offset = 0;
+        const limit = 10;
+        let hasMore = true;
+        let isLoading = false;
 
-        // --- DOM Element Reference ---
-        const catalogList = document.getElementById('catalog-list');
-        const loader = document.getElementById('loader');
-
-        // ====================================================================
-        // A. Rendering Functions
-        // ====================================================================
+        const catalogContainer = document.getElementById('catalog-container');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const endOfResults = document.getElementById('end-of-results');
 
         /**
-         * Creates the HTML markup for a single book card.
+         * Creates the HTML structure for a single book card.
+         * @param {object} book - The book data object from the API.
+         * @returns {string} The HTML string for the book card.
          */
         function createBookCard(book) {
-            const isbnClean = String(book.isbn || '').replace(/-/g, '').trim();
+            const images = splitImages(book.cover);
+            const coverImage = images.length > 0 ? getCoverImageUrl(images[0]) : 'placeholder.jpg';
             
-            // Split the comma-separated cover string to get the main cover (cover1)
-            // The 'cover' field is the comma-separated list of image filenames
-            const coverFilenames = book.cover ? book.cover.split(',').map(f => f.trim()) : [];
-            const mainCoverFilename = coverFilenames[0]; // Take the first image as the main cover
-            const coverUrl = getCoverImageUrl(mainCoverFilename);
-
-            // Use a placeholder if no image URL is available
-            const imageUrl = coverUrl || './placeholder.jpg'; 
-
             return `
-                <div class="book-card" data-isbn="${isbnClean}">
+                <div class="book-card" data-isbn="${book.isbn}">
                     <div class="book-cover-container">
-                        <img src="${imageUrl}" alt="${book.title}" class="book-cover" loading="lazy">
+                        <img class="book-cover" src="${coverImage}" alt="${book.title} Cover">
                     </div>
                     <div class="book-info">
-                        <h3 class="book-title">${book.title || 'N/A'}</h3>
-                        <p class="book-author">${getTranslation('author') || 'Author'}: ${book.author || 'N/A'}</p>
+                        <h3 class="book-title">${book.title}</h3>
+                        <p class="book-author">${book.author}</p>
                         <p class="book-price">${formatCurrency(book.price)}</p>
+                        <p class="book-language">${getTranslation(book.language)}</p>
                         <div class="card-actions">
-                            <a href="preview.html?isbn=${isbnClean}" class="button view-details-button" data-i18n="viewDetails">${getTranslation('viewDetails')}</a>
-                            <button class="button add-to-cart-button" data-i18n="addToCart">${getTranslation('addToCart')}</button>
+                            <a href="details.html?isbn=${book.isbn}" class="button view-details-button" data-i18n="viewDetails">${getTranslation('viewDetails')}</a>
+                            <button class="button add-to-cart-button" data-isbn="${book.isbn}" data-i18n="addToCart">${getTranslation('addToCart')}</button>
                         </div>
                     </div>
                 </div>
@@ -110,111 +102,83 @@
         }
 
         /**
-         * Renders the fetched books to the catalog list.
+         * Fetches a chunk of the catalog based on the current offset.
+         * @param {boolean} [reset=false] - If true, resets the offset and clears the container.
          */
-        function renderCatalogChunk(books) {
-            if (books.length === 0 && offset === 0) {
-                // Only show 'No books found' if this is the first load and it's empty
-                catalogList.innerHTML = `<p class="empty-message" data-i18n="noBooksFound">${getTranslation('noBooksFound')}</p>`;
-                return;
-            }
-            
-            // Append the new chunk of books
-            const fragment = document.createDocumentFragment();
-            books.forEach(book => {
-                const div = document.createElement('div');
-                div.innerHTML = createBookCard(book);
-                fragment.appendChild(div.firstChild);
-            });
-            catalogList.appendChild(fragment);
-            
-            // After appending, update the offset for the next fetch
-            offset += books.length;
-        }
-
-
-        // ====================================================================
-        // B. Data Fetching and Infinite Scroll Logic
-        // ====================================================================
-
-        /**
-         * Fetches a chunk of catalog data from the Google Apps Script API.
-         */
-        async function fetchCatalog(reset = false) {
-            if(reset) {
-                // Allows language switcher or filters to trigger a full refresh
+        window.fetchCatalog = async function(reset = false) {
+            if (reset) {
                 offset = 0;
                 hasMore = true;
-                isFetching = false;
-                catalogList.innerHTML = '';
+                catalogContainer.innerHTML = ''; // Clear existing books
+                endOfResults.style.display = 'none';
             }
-
-            if (!hasMore || isFetching) return; // Prevent unnecessary fetches
-
-            isFetching = true;
-            loader.style.display = 'block'; // Show loader
+            
+            if (isLoading || !hasMore) return;
+            isLoading = true;
+            loadingIndicator.style.display = 'block';
 
             try {
-                // Construct the URL with pagination parameters
                 const url = `${API_ENDPOINTS.CATALOG_API_ENDPOINT}?limit=${limit}&offset=${offset}`;
-                
                 const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                const data = await response.json();
 
-                const result = await response.json();
-                
-                // --- API Response Check ---
-                if (result.error) {
-                    console.error('API Error:', result.error);
-                    // Handle API error display to user
+                if (data.error) {
+                    catalogContainer.innerHTML = `<p style="color: red;">Error loading catalog: ${data.error}</p>`;
+                    hasMore = false;
                     return;
                 }
 
-                const books = result.data || [];
-                hasMore = result.hasMore;
-                
-                // Render the new chunk of books to the page
-                renderCatalogChunk(books);
-                
-            } catch (error) {
-                console.error('Failed to load catalog:', error);
-                if (offset === 0) {
-                    // Show error message only on initial load failure
-                    catalogList.innerHTML = `<p class="error-message">Failed to load catalog. Please check API URL and network connection.</p>`;
+                if (data.data.length > 0) {
+                    const html = data.data.map(createBookCard).join('');
+                    catalogContainer.insertAdjacentHTML('beforeend', html);
+                    offset += limit;
+                    hasMore = data.hasMore;
+                } else {
+                    if (offset === 0) {
+                        catalogContainer.innerHTML = `<p data-i18n="noBooksFound">${getTranslation('noBooksFound')}</p>`;
+                    }
+                    hasMore = false;
                 }
+
+            } catch (error) {
+                console.error("Failed to fetch catalog:", error);
+                catalogContainer.innerHTML += `<p style="color: red;">Failed to load data. Check network connection.</p>`;
             } finally {
-                isFetching = false;
-                loader.style.display = 'none'; // Hide loader
+                isLoading = false;
+                loadingIndicator.style.display = 'none';
+                
+                if (!hasMore && offset > 0) {
+                    endOfResults.style.display = 'block';
+                }
             }
         }
 
         /**
-         * Checks if the user has scrolled near the bottom of the page.
+         * Handles the infinite scroll logic when the user approaches the bottom.
          */
-        function handleScroll() {
-            // Check if the bottom of the document is within 1000 pixels of the current viewport
-            const scrollThreshold = 1000; 
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - scrollThreshold) {
-                fetchCatalog(); // Fetch more data
+        const handleScroll = () => {
+            const scrollThreshold = 1000; // Load new books when within 1000px of the bottom
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            const scrollTop = document.documentElement.scrollTop;
+
+            if (scrollTop + windowHeight >= documentHeight - scrollThreshold) {
+                window.fetchCatalog();
             }
-        }
+        };
 
-        // ====================================================================
+        // ==========================================================
         // C. Initialization
-        // ====================================================================
-
-        // Expose fetchCatalog globally so the language switcher can trigger a reload
-        window.fetchCatalog = fetchCatalog;
-
+        // ==========================================================
+        
         document.addEventListener('DOMContentLoaded', () => {
             // Start the initial load of the catalog
-            fetchCatalog();
+            window.fetchCatalog();
             
             // Add the event listener for infinite scroll
             window.addEventListener('scroll', handleScroll);
         });
+        
     </script>
 </body>
 </html>

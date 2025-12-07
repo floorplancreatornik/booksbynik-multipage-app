@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BooksByNIK - Login</title>
-    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="styles.css"> 
 </head>
 <body>
 
@@ -26,6 +26,7 @@
 
     <script type="module">
         // Import necessary components from the central script
+        // currentLang is needed to record user's preferred language on registration
         import { API_ENDPOINTS, currentLang } from './script.js';
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -46,8 +47,7 @@
             const loginButton = document.getElementById('login-button');
             const messageElement = document.getElementById('login-message');
             
-            // Get the current language setting from script.js
-            const language = currentLang; 
+            const language = currentLang; // Get the language currently set in script.js
 
             // Input validation
             if (!name || !phone) {
@@ -65,7 +65,6 @@
                 const response = await fetch(API_ENDPOINTS.PROFILE_API_ENDPOINT, {
                     method: 'POST',
                     mode: 'cors',
-                    // Required format for Apps Script POST body consumption
                     headers: {
                         'Content-Type': 'text/plain;charset=utf-8', 
                     },
