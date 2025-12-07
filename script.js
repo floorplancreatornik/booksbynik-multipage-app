@@ -4,16 +4,18 @@
 
 // **YOUR LIVE GOOGLE APPS SCRIPT URLS**
 export const API_ENDPOINTS = {
-    // CATALOG API (LIVE URL confirmed in screenshots)
+    // CATALOG API (LIVE URL provided earlier)
     CATALOG_API_ENDPOINT: 'https://script.google.com/macros/s/AKfycbxTglhNy-kHNzaFTghKMUxbqzcD8B1ZW4LxO6mWJaZqmUNt4uV5L3we6kvofEe_hXuL/exec', 
     
-    // PROFILE & ORDERS APIs (Placeholder - Must be updated after deployment)
-    PROFILE_API_ENDPOINT: 'YOUR_GOOGLE_APPS_SCRIPT_PROFILE_URL_HERE', 
+    // PROFILE API (NEWLY DEPLOYED URL for Login/Registration)
+    PROFILE_API_ENDPOINT: 'https://script.google.com/macros/s/AKfycbzhNRvQnWRomo_VNXNoIFXXsvKdUvzOKqD2EFZcQzdIYfNWnIi0OKk3bP0ISRAPwQM/exec', 
+    
+    // ORDERS APIs (Placeholder - To be updated later)
     ORDERS_API_ENDPOINT: 'YOUR_GOOGLE_APPS_SCRIPT_ORDERS_URL_HERE'
 };
 
-// **FINAL CORRECT IMAGE HOSTING BASE URL**
-// This points to the /cover folder in your specific GitHub Pages deployment.
+// **IMAGE HOSTING BASE URL**
+// Confirmed GitHub Pages path to your /cover folder
 export const IMAGE_BASE_URL = 'https://floorplancreatornik.github.io/booksbynik-multipage-app/cover/'; 
 
 
@@ -123,7 +125,7 @@ export function initializeLanguageSelector() {
 
 
 // ====================================================================
-// D. Utility Functions
+// D. Utility Functions and Initialization
 // ====================================================================
 
 /**
@@ -175,6 +177,7 @@ export function formatCurrency(amount) {
 
 // Initialize theme and language when script loads
 document.addEventListener('DOMContentLoaded', () => {
+    // These functions fix the theme and language issues by running on page load
     initializeThemeSwitch();
     applyTranslations();
     initializeLanguageSelector();
