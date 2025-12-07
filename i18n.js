@@ -39,7 +39,7 @@ export const translations = {
         languageNote: "You can change the language anytime from Profile Settings.",
         loginButton: "Login / Register",
         enterNamePlaceholder: "Enter your full official name",
-        enterNumberPlaceholder: "Enter 10 digit Mobile number", // <--- UPDATED
+        enterNumberPlaceholder: "Enter 10 digit Mobile number",
         nameRequired: "Please enter your official name.",
         numberRequired: "Please enter a valid 10-digit phone number.",
         
@@ -91,12 +91,15 @@ export const translations = {
         languageNote: "പ്രൊഫൈൽ ക്രമീകരണങ്ങളിൽ നിന്ന് നിങ്ങൾക്ക് എപ്പോഴും ഭാഷ മാറ്റാം.",
         loginButton: "ലോഗിൻ / രജിസ്റ്റർ",
         enterNamePlaceholder: "നിങ്ങളുടെ പൂർണ്ണമായ ഔദ്യോഗിക നാമം നൽകുക",
-        enterNumberPlaceholder: "10 അക്ക മൊബൈൽ നമ്പർ നൽകുക", // <--- UPDATED
+        enterNumberPlaceholder: "10 അക്ക മൊബൈൽ നമ്പർ നൽകുക",
         nameRequired: "ദയവായി നിങ്ങളുടെ ഔദ്യോഗിക നാമം നൽകുക.",
         numberRequired: "ദയവായി സാധുതയുള്ള 10 അക്ക ഫോൺ നമ്പർ നൽകുക.",
 
-        // General UI elements (used in other pages)
-        catalog: "കാറ്റലോഗ്",
+        // --- CONCISE NAV BAR TWEAKS ---
+        catalog: "കാറ്റലോഗ്", // Concise: Catalog
+        cartTitle: "കാർട്ട്", // Concise: Cart
+        myProfile: "പ്രൊഫൈൽ", // Concise: Profile
+
         viewDetails: "വിശദാംശങ്ങൾ കാണുക",
         bookDetails: "പുസ്തക വിശദാംശങ്ങൾ",
         description: "വിവരണം",
@@ -104,14 +107,12 @@ export const translations = {
         pages: "പേജുകൾ",
         addToCart: "കാർട്ടിലേക്ക് ചേർക്കുക",
         addedToCart: "ഇനം കാർട്ടിലേക്ക് ചേർത്തു!",
-        cartTitle: "നിങ്ങളുടെ ഷോപ്പിംഗ് കാർട്ട്",
         orderSummary: "ഓർഡർ സംഗ്രഹം",
         subtotal: "സബ്‌ടോട്ടൽ:",
         total: "ആകെ:",
         shippingNote: "*നികുതികളും ഷിപ്പിംഗും ലാളിത്യത്തിനായി ആകെ തുകയിൽ ഉൾപ്പെടുത്തിയിരിക്കുന്നു.",
         checkout: "ചെക്കൗട്ട്",
         cartEmpty: "നിങ്ങളുടെ കാർട്ട് ശൂന്യമാണ്.",
-        myProfile: "എന്റെ പ്രൊഫൈൽ",
         accountDetails: "അക്കൗണ്ട് വിശദാംശങ്ങൾ",
         changeNote: "*പേരോ നമ്പറോ മാറ്റാൻ, നിങ്ങൾ ലോഗ് ഔട്ട് ചെയ്ത് വീണ്ടും ലോഗിൻ ചെയ്യണം.",
         appSettings: "ആപ്പ് ക്രമീകരണങ്ങൾ",

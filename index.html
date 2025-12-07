@@ -1,60 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="appTitle">BooksByNIK</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-    <div class="max-w-md mx-auto p-4 pt-10">
-
-        <button id="themeToggle" class="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-            <svg id="sunIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-            <svg id="moonIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-        </button>
-
-        <h1 class="text-3xl font-bold text-center mb-4" data-i18n="welcome">Welcome to BooksByNIK</h1>
-        <p class="text-center mb-6" data-i18n="enterDetails">Enter your details to access the catalog.</p>
-
-        <form id="loginForm" class="bg-white dark:bg-gray-700 shadow-md rounded-lg p-6 space-y-4">
-            <div>
-                <label for="userName" class="block text-sm font-medium text-gray-700 dark:text-gray-200" data-i18n="yourName">Your Name</label>
-                <input type="text" id="userName" name="userName" required
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-800 dark:text-white"
-                    data-i18n-placeholder="enterNamePlaceholder" placeholder="Enter your full official name">
-            </div>
-            
-            <div>
-                <label for="userNumber" class="block text-sm font-medium text-gray-700 dark:text-gray-200" data-i18n="phoneNumber">Phone Number</label>
-                <div class="flex mt-1"> 
-                    <span class="inline-flex items-center px-3 border border-r-0 border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 rounded-l-md text-sm custom-country-code-fix">
-                        +91
-                    </span>
-                    <input type="tel" id="userNumber" name="userNumber" required pattern="\d{10}" maxlength="10"
-                        class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-r-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-800 dark:text-white"
-                        data-i18n-placeholder="enterNumberPlaceholder" placeholder="e.g., 9876543210">
-                </div>
-            </div>
-            
-            <div>
-                <label for="appLanguage" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1" data-i18n="appLanguage">App Language:</label>
-                <select id="appLanguage" name="appLanguage" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
-                    <option value="en">English</option>
-                    <option value="ml">മലയാളം (Malayalam)</option>
-                </select>
-                <p class="text-xs mt-1 text-gray-500 dark:text-gray-300" data-i18n="languageNote">You can change the language anytime from Profile Settings.</p>
-            </div>
-
-            <button type="submit" id="loginButton" class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition duration-150" data-i18n="loginButton">
-                Login / Register
-            </button>
-        </form>
-    </div>
-
-    <script type="module">
-        import { API_ENDPOINTS } from './script.js'; 
+<script type="module">
+        // IMPORT FIX: Ensure initializeTheme and toggleTheme are imported for the login page
+        import { API_ENDPOINTS, toggleTheme, initializeTheme } from './script.js'; 
         import { setLanguage, applyTranslations, translations, getAppLanguage } from './i18n.js';
         
         const loginForm = document.getElementById('loginForm');
@@ -67,7 +13,6 @@
             loginButton.textContent = 'Saving Profile...';
             loginButton.disabled = true;
 
-            // Existing logic to save profile data
             try {
                 const formData = new URLSearchParams();
                 formData.append('action', 'saveProfile'); 
@@ -75,13 +20,15 @@
                 formData.append('userNumber', number);
                 formData.append('appLanguage', lang);
 
+                // API call to Google Sheet
                 await fetch(API_ENDPOINTS.PROFILE_API_ENDPOINT, {
                     method: 'POST',
-                    mode: 'no-cors',
+                    mode: 'no-cors', // Essential for Google Apps Script interaction
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: formData.toString()
                 });
 
+                // Save data locally and redirect
                 localStorage.setItem('userName', name);
                 localStorage.setItem('userNumber', number);
                 localStorage.setItem('appLanguage', lang);
@@ -91,21 +38,26 @@
             } catch (error) {
                 console.error('API Error: Could not save profile to Google Sheet.', error);
                 
+                // Fallback: Save local data even if API fails and proceed
                 localStorage.setItem('userName', name);
                 localStorage.setItem('userNumber', number);
                 localStorage.setItem('appLanguage', lang);
                 
-                alert("Profile saved locally, but error contacting server. Please try again later.");
+                alert("Profile saved locally, but error contacting server. Please check your API URL.");
                 window.location.replace('home.html');
             }
         }
         
         document.addEventListener('DOMContentLoaded', () => {
+            // THEME FIX: Initialize theme and set language on load
+            initializeTheme();
             const currentLang = getAppLanguage();
             appLanguageSelect.value = currentLang;
-            // Theme toggle logic (omitted for brevity, but assumed to be in script.js or integrated)
         });
         
+        // THEME FIX: Re-bind the theme toggle listener
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
         appLanguageSelect.addEventListener('change', (e) => {
             setLanguage(e.target.value);
             applyTranslations(); 
@@ -131,5 +83,3 @@
             saveProfileData(name, number, lang);
         });
     </script>
-</body>
-</html>

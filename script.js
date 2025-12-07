@@ -1,85 +1,77 @@
-// ====================================================================
-// script.js: Shared Constants and Global Functions
-// Core file for APIs, Theme, Auth, and running i18n setup.
-// ====================================================================
-
-// --- 1. IMPORT i18n Logic ---
-import { applyTranslations, setLanguage, getAppLanguage, translations } from './i18n.js';
-
-// --- 2. GOOGLE APPS SCRIPT API ENDPOINTS ---
+// --- API Endpoints ---
 export const API_ENDPOINTS = {
-    CATALOG_API_ENDPOINT: "https://script.google.com/macros/s/AKfycbziBJMiEM0s_deX7L8-JFde6FjZXQYVu6J-1cPa7b3KBNhYSOsUz-9Nczo2LcTrUouj0g/exec",
-    ORDER_API_ENDPOINT: "https://script.google.com/macros/s/AKfycbwkbb81y8szLipovLlQxDrjfy-y-ETpLNuZjHJXokjm8dKd6Px12HqBrtvbCvEvA-7U/exec",
-    PROFILE_API_ENDPOINT: "https://script.google.com/macros/s/AKfycbw8kuI-nMHu4do7WIU-nwqiKNWctP0DQkQbCIEd6Tw0AW3Qi6piDAv5xCRHyPRGkP8J/exec"
+    // NOTE: Replace these with your actual published Google Apps Script URLs
+    CATALOG_API_ENDPOINT: 'YOUR_GOOGLE_APPS_SCRIPT_CATALOG_URL_HERE', 
+    PROFILE_API_ENDPOINT: 'YOUR_GOOGLE_APPS_SCRIPT_PROFILE_URL_HERE', 
+    ORDERS_API_ENDPOINT: 'YOUR_GOOGLE_APPS_SCRIPT_ORDERS_URL_HERE'
 };
 
+// --- Theme Management ---
 
-// --- 3. THEME LOGIC (Used by all pages) ---
+/** Sets the theme in localStorage and updates the 'dark' class on the HTML element. */
+function setStoredTheme(isDark) {
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    document.documentElement.classList.toggle('dark', isDark);
+}
 
-/**
- * Applies the selected theme based on local storage or system preference.
- */
-export function applyTheme() {
-    const storedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDark = (storedTheme === 'dark' || (!storedTheme && prefersDark));
-
-    document.body.classList.toggle('dark', isDark);
-
+/** Toggles the visibility of the sun/moon icons based on the current theme. */
+function updateThemeIcons(isDark) {
     const sunIcon = document.getElementById('sunIcon');
     const moonIcon = document.getElementById('moonIcon');
     if (sunIcon && moonIcon) {
-        sunIcon.classList.toggle('hidden', !isDark);
-        moonIcon.classList.toggle('hidden', isDark);
+        sunIcon.classList.toggle('hidden', !isDark); // Show sun (light icon) in dark mode
+        moonIcon.classList.toggle('hidden', isDark);  // Show moon (dark icon) in light mode
     }
 }
 
-/**
- * Toggles the theme between dark and light mode.
- */
+/** Toggles the theme between light and dark. */
 export function toggleTheme() {
-    const isDark = document.body.classList.contains('dark');
-    const newTheme = isDark ? 'light' : 'dark';
-    localStorage.setItem('theme', newTheme);
-    applyTheme();
+    const isDark = document.documentElement.classList.contains('dark');
+    setStoredTheme(!isDark);
+    updateThemeIcons(!isDark);
 }
 
+/** Initializes the theme based on stored preference or system setting. */
+export function initializeTheme() {
+    // Check if the script is running in a page that contains a body (i.e., not just a worker)
+    if (!document.body) return;
 
-// --- 4. AUTH GUARD (Simple check before loading protected pages) ---
-
-/**
- * Checks if the user has logged in (has a profile saved locally) 
- * and redirects to index.html if not.
- */
-export function checkLogin() {
-    const userName = localStorage.getItem('userName');
-    const userNumber = localStorage.getItem('userNumber');
-    // If user info is missing, redirect them to the login page.
-    if (!userName || !userNumber) {
-        if (!window.location.pathname.endsWith('index.html')) {
-            window.location.replace('index.html');
-        }
-    }
-}
-
-// Attach listeners and run initial setup on page load
-document.addEventListener('DOMContentLoaded', () => {
-    applyTheme();
-    // NEW: Run the translation logic imported from i18n.js
-    applyTranslations(); 
+    const storedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
-    const themeToggle = document.getElementById('themeToggle');
-    if (themeToggle) {
-        themeToggle.addEventListener('click', toggleTheme);
+    let isDark;
+    if (storedTheme === 'dark') {
+        isDark = true;
+    } else if (storedTheme === 'light') {
+        isDark = false;
+    } else {
+        isDark = systemPrefersDark; // Default to system preference
     }
-});
-
-
-// Call checkLogin on every page load (except index.html and thankyou.html)
-const path = window.location.pathname;
-if (!path.endsWith('index.html') && !path.endsWith('thankyou.html')) {
-    document.addEventListener('DOMContentLoaded', checkLogin);
+    
+    // Apply the class to the document root immediately
+    document.documentElement.classList.toggle('dark', isDark);
+    updateThemeIcons(isDark);
 }
 
-// Re-export i18n functions/objects needed by other files (e.g., home.html needs translations object)
-export { applyTranslations, setLanguage, getAppLanguage, translations };
+// --- Authentication Guard ---
+export function checkAuth() {
+    const userNumber = localStorage.getItem('userNumber');
+    const currentPath = window.location.pathname;
+    // Check if the current page is the index.html or the root path
+    const isLoginPage = currentPath.includes('index.html') || currentPath.endsWith('/');
+
+    if (!userNumber && !isLoginPage) {
+        // Not logged in and not on the login page, redirect to login
+        window.location.replace('index.html');
+        return false;
+    }
+    if (userNumber && isLoginPage) {
+        // Logged in and on the login page, redirect to home
+        window.location.replace('home.html');
+        return false;
+    }
+    return true; // Auth is good for this page
+}
+
+// Ensure theme is initialized as soon as the DOM is available
+document.addEventListener('DOMContentLoaded', initializeTheme);
