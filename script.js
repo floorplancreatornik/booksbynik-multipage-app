@@ -2,15 +2,15 @@
 // A. API Endpoints and Configuration
 // ====================================================================
 
-// **YOUR LIVE GOOGLE APPS SCRIPT URLS**
+// **YOUR LIVE GOOGLE APPS SCRIPT URLS - MUST BE DEPLOYED SEPARATELY**
 export const API_ENDPOINTS = {
-    // CATALOG API (LIVE URL provided earlier)
+    // 1. LOGIN/REGISTER (Needs doPost) - VERIFIED URL
+    PROFILE_API_ENDPOINT: 'https://script.google.com/macros/s/AKfycbxr5Xa9utQAQPH5QKbFq9aY34DmgU86wnoby95ns0bDMSZYlQPgjvmcFgvsYxDJEA8OYg/exec', 
+    
+    // 2. CATALOG (Needs doGet) - VERIFIED URL
     CATALOG_API_ENDPOINT: 'https://script.google.com/macros/s/AKfycbxTglhNy-kHNzaFTghKMUxbqzcD8B1ZW4LxO6mWJaZqmUNt4uV5L3we6kvofEe_hXuL/exec', 
     
-    // PROFILE API (NEWLY DEPLOYED URL for Login/Registration)
-    PROFILE_API_ENDPOINT: 'https://script.google.com/macros/s/AKfycbzhNRvQnWRomo_VNXNoIFXXsvKdUvzOKqD2EFZcQzdIYfNWnIi0OKk3bP0ISRAPwQM/exec', 
-    
-    // ORDERS APIs (Placeholder - To be updated later)
+    // 3. CHECKOUT/ORDERS (Needs doPost) - PLACEHOLDER for next step
     ORDERS_API_ENDPOINT: 'YOUR_GOOGLE_APPS_SCRIPT_ORDERS_URL_HERE'
 };
 
