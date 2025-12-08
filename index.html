@@ -11,16 +11,12 @@
     <header>
         <div class="logo">BooksByNIK</div>
         <div class="header-controls">
-            <label for="lang-selector" data-i18n="languageTitle" style="white-space: nowrap;">Language:</label>
             <select id="lang-selector" class="uniform-input">
                 <option value="en">English</option>
                 <option value="ml">മലയാളം</option>
             </select>
             
-            <label class="switch">
-                <input type="checkbox" id="theme-toggle">
-                <span class="slider round"></span>
-            </label>
+            <button id="theme-toggle-icon" class="theme-toggle-icon">☀️</button>
         </div>
     </header>
 
@@ -59,10 +55,8 @@
     </main>
 
     <script type="module">
-        // The script logic remains the same, but it now pulls the language from the header selector.
-        import { API_ENDPOINTS, initializeThemeSwitch, initializeLanguageSelector, currentLang } from './script.js';
+        import { API_ENDPOINTS, initializeThemeSwitch, initializeLanguageSelector, currentLang, setLanguage } from './script.js';
 
-        // Initialize Theme and Language controls on the Login Page
         document.addEventListener('DOMContentLoaded', () => {
             initializeThemeSwitch();
             initializeLanguageSelector(); 
@@ -76,8 +70,8 @@
         async function handleLogin(e) {
             e.preventDefault(); 
             
-            // Get the language value directly from the selector or fallback to currentLang
             const langSelector = document.getElementById('lang-selector');
+            // Use the language selected in the header selector
             const language = langSelector ? langSelector.value : currentLang;
 
             const name = document.getElementById('name-input').value.trim();
@@ -85,7 +79,6 @@
             const loginButton = document.getElementById('login-button');
             const messageElement = document.getElementById('login-message');
             
-            // Validation Check for 10 digits
             if (!name || !phone) {
                 messageElement.textContent = "Please fill in all fields.";
                 return;
@@ -100,7 +93,6 @@
             messageElement.style.color = 'blue';
 
             try {
-                // Send name, 10-digit phone, and the selected language
                 const response = await fetch(API_ENDPOINTS.PROFILE_API_ENDPOINT, {
                     method: 'POST',
                     mode: 'cors',
@@ -115,8 +107,10 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    // Store user data (including the selected language) locally
+                    // Store user data locally
                     localStorage.setItem('userProfile', JSON.stringify(result.user));
+                    // Ensure the global app language is set to the user's saved preference
+                    setLanguage(result.user.language); 
                     
                     messageElement.textContent = "Success! Redirecting...";
                     messageElement.style.color = 'green';

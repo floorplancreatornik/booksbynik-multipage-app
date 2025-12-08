@@ -15,12 +15,11 @@ export const API_ENDPOINTS = {
 };
 
 // **IMAGE HOSTING BASE URL**
-// Confirmed GitHub Pages path to your /cover folder
 export const IMAGE_BASE_URL = 'https://floorplancreatornik.github.io/booksbynik-multipage-app/cover/'; 
 
 
 // ====================================================================
-// B. Theme Management (Dark/Light Mode)
+// B. Theme Management (Dark/Light Mode - Icon Based)
 // ====================================================================
 
 const THEME_KEY = 'booksbynik_theme';
@@ -28,17 +27,26 @@ const currentTheme = localStorage.getItem(THEME_KEY) || 'light';
 document.documentElement.setAttribute('data-theme', currentTheme);
 
 export function toggleTheme() {
-    const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', newTheme);
+    const root = document.documentElement;
+    const newTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', newTheme);
     localStorage.setItem(THEME_KEY, newTheme);
+    
+    // Update the icon across all instances (in theory, only one per page)
+    const iconButton = document.getElementById('theme-toggle-icon');
+    if (iconButton) {
+        iconButton.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+    }
 }
 
-// Function to initialize the theme switch state on load
+// Function to initialize the icon button state on load
 export function initializeThemeSwitch() {
-    const themeToggle = document.getElementById('theme-toggle');
-    if (themeToggle) {
-        themeToggle.checked = currentTheme === 'dark';
-        themeToggle.addEventListener('change', toggleTheme);
+    const iconButton = document.getElementById('theme-toggle-icon');
+    if (iconButton) {
+        // Set initial icon state
+        iconButton.textContent = currentTheme === 'dark' ? '🌙' : '☀️';
+        // Attach click listener
+        iconButton.addEventListener('click', toggleTheme);
     }
 }
 
@@ -47,43 +55,46 @@ export function initializeThemeSwitch() {
 // C. Internationalization (i18n) - Language Management
 // ====================================================================
 
-// Default translations object (add more keys and languages here)
 export const translations = {
     "en": {
         "catalog": "Catalog",
         "cart": "Cart",
         "profile": "Profile",
+        "checkout": "Checkout",
         "search": "Search books...",
         "viewDetails": "View Details",
         "addToCart": "Add to Cart",
         "noBooksFound": "No books found.",
         "languageTitle": "Language:",
         "allLanguages": "All",
-        // Technical keywords for filtering (to be translated for the user)
         "malayalam": "Malayalam", 
         "english": "English",
-        "fiction": "Fiction",
-        "selfhelp": "Self-Help",
-        "paperback": "Paperback",
-        "hardcover": "Hardcover",
+        "name": "Name",
+        "phone": "Phone",
+        "noEditProfile": "To change your name or phone number, please logout and re-register.",
+        "pincode": "Pincode",
+        "address": "Address",
+        "total": "Total",
     },
     "ml": {
         "catalog": "കാറ്റലോഗ്",
         "cart": "കാർട്ട്",
         "profile": "പ്രൊഫൈൽ",
+        "checkout": "ചെക്ക്ഔട്ട്",
         "search": "പുസ്തകങ്ങൾ തിരയുക...",
         "viewDetails": "വിശദാംശങ്ങൾ കാണുക",
         "addToCart": "കാർട്ടിൽ ചേർക്കുക",
         "noBooksFound": "പുസ്തകങ്ങളൊന്നും കണ്ടെത്തിയില്ല.",
         "languageTitle": "ഭാഷ:",
         "allLanguages": "എല്ലാം",
-        // Technical keywords for filtering (to be translated for the user)
         "malayalam": "മലയാളം",
         "english": "ഇംഗ്ലീഷ്",
-        "fiction": "ഫിക്ഷൻ",
-        "selfhelp": "സഹായഗ്രന്ഥങ്ങൾ",
-        "paperback": "പേപ്പർബാക്ക്",
-        "hardcover": "ഹാർഡ്കവർ",
+        "name": "പേര്",
+        "phone": "ഫോൺ",
+        "noEditProfile": "നിങ്ങളുടെ പേരോ ഫോൺ നമ്പറോ മാറ്റാൻ, ലോഗൗട്ട് ചെയ്ത് വീണ്ടും രജിസ്റ്റർ ചെയ്യുക.",
+        "pincode": "പിൻകോഡ്",
+        "address": "വിലാസം",
+        "total": "ആകെ",
     }
 };
 
@@ -91,11 +102,10 @@ const LANG_KEY = 'booksbynik_lang';
 export let currentLang = localStorage.getItem(LANG_KEY) || 'en';
 
 export function getTranslation(key) {
-    const langKey = key.toLowerCase(); 
+    const langKey = key.toLowerCase().trim(); 
     return translations[currentLang][langKey] || key; 
 }
 
-// Function to apply translations across the app
 export function applyTranslations() {
     document.querySelectorAll('[data-i18n]').forEach(element => {
         const key = element.getAttribute('data-i18n');
@@ -107,18 +117,23 @@ export function setLanguage(lang) {
     currentLang = lang;
     localStorage.setItem(LANG_KEY, lang);
     applyTranslations();
-    // Use window.fetchCatalog if defined (which it is in home.html)
+    // Update the selector to reflect the change globally
+    const langSelector = document.getElementById('lang-selector');
+    if (langSelector) {
+        langSelector.value = lang;
+    }
+
+    // Attempt to re-fetch the catalog on home.html if the function exists
     if (typeof window.fetchCatalog === 'function') {
-        // Reset and fetch data for the new language context
         window.fetchCatalog(true); 
     }
 }
 
-// Function to initialize the language selector
 export function initializeLanguageSelector() {
     const langSelector = document.getElementById('lang-selector');
     if (langSelector) {
         langSelector.value = currentLang;
+        // The event listener now calls the global setLanguage function
         langSelector.addEventListener('change', (e) => setLanguage(e.target.value));
     }
 }
@@ -128,62 +143,40 @@ export function initializeLanguageSelector() {
 // D. Utility Functions and Initialization
 // ====================================================================
 
-/**
- * Removes hyphens from ISBN for use in URLs and cart IDs.
- * @param {string} isbn - The ISBN string, possibly with hyphens.
- * @returns {string} The clean, hyphen-free ISBN.
- */
 export function cleanISBN(isbn) {
     return String(isbn).replace(/-/g, '').trim();
 }
 
-/**
- * Creates the full public URL for a cover image.
- * @param {string} filename - The cover image filename (e.g., 'alchemist.jpg').
- * @returns {string} The complete public image URL.
- */
 export function getCoverImageUrl(filename) {
     if (!filename) return ''; 
-    // Construct URL: BASE_URL + filename
     return IMAGE_BASE_URL + encodeURIComponent(filename.trim());
 }
 
-/**
- * Takes the comma-separated string from the 'cover' field and returns an array of filenames.
- * @param {string} coverString - The comma-separated image filenames.
- * @returns {string[]} An array of cleaned filenames.
- */
 export function splitImages(coverString) {
     if (!coverString || typeof coverString !== 'string') return [];
-    
-    // Split the string by comma, then trim whitespace from each filename, and filter out any empty strings
-    return coverString.split(',')
-                      .map(filename => filename.trim())
-                      .filter(filename => filename.length > 0);
+    return coverString.split(',').map(filename => filename.trim()).filter(filename => filename.length > 0);
 }
 
-
-/**
- * Formats a number to currency (INR).
- * @param {number|string} amount - The price amount.
- * @returns {string} Formatted currency string.
- */
 export function formatCurrency(amount) {
     const num = parseFloat(amount);
     if (isNaN(num)) return '₹0.00';
-    // Use toLocaleString for proper Indian Rupee formatting (e.g., 1,00,000.00)
     return num.toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 });
+}
+
+// Function to get the current user profile from local storage
+export function getUserProfile() {
+    const profileJson = localStorage.getItem('userProfile');
+    return profileJson ? JSON.parse(profileJson) : null;
 }
 
 // Initialize theme and language when script loads
 document.addEventListener('DOMContentLoaded', () => {
-    // These functions fix the theme and language issues by running on page load
     initializeThemeSwitch();
     applyTranslations();
     initializeLanguageSelector();
 });
 
-// Expose utilities globally for access from other HTML files' inline scripts
+// Expose utilities globally 
 window.toggleTheme = toggleTheme;
 window.setLanguage = setLanguage;
 window.getTranslation = getTranslation;
@@ -192,3 +185,4 @@ window.getCoverImageUrl = getCoverImageUrl;
 window.formatCurrency = formatCurrency;
 window.splitImages = splitImages;
 window.API_ENDPOINTS = API_ENDPOINTS;
+window.getUserProfile = getUserProfile;

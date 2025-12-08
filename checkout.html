@@ -1,160 +1,180 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="checkout">Checkout</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <title>BooksByNIK - Checkout</title>
+    <link rel="stylesheet" href="styles.css"> 
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-    <div class="container mx-auto p-4 pb-20">
-        <header class="flex justify-between items-center mb-6">
-            <a href="cart.html" class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            </a>
-            <h1 class="text-2xl font-bold dark:text-white" data-i18n="checkout">Checkout</h1>
-            <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-                <svg id="sunIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                <svg id="moonIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-            </button>
-        </header>
+<body>
 
-        <div class="bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 space-y-6 text-gray-900 dark:text-white">
+    <header>
+        <div class="logo">BooksByNIK</div>
+        <nav>
+            <a href="home.html" data-i18n="catalog">Catalog</a>
+            <a href="cart.html" data-i18n="cart">Cart</a>
+            <a href="profile.html" data-i18n="profile">Profile</a>
+        </nav>
+        <div class="header-controls">
+            <select id="lang-selector" class="uniform-input">
+                <option value="en">English</option>
+                <option value="ml">മലയാളം</option>
+            </select>
             
-            <h2 class="text-xl font-semibold border-b pb-2 mb-4 dark:border-gray-600" data-i18n="shippingDetails">Shipping Details</h2>
-            <form id="checkoutForm" class="space-y-4">
-                
-                <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded-md text-sm">
-                    <p><span class="font-medium dark:text-gray-200">User:</span> <span id="checkoutUserName" class="dark:text-gray-300"></span></p>
-                    <p><span class="font-medium dark:text-gray-200" data-i18n="phoneNumber">Number:</span> <span id="checkoutUserNumber" class="dark:text-gray-300"></span></p>
-                </div>
-
-                <div>
-                    <label for="fullAddress" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1" data-i18n="fullAddress">Full Address (with Pincode)</label>
-                    <textarea id="fullAddress" rows="4" required placeholder="H.No, Street, Village/City, District, Pincode"
-                              class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-green-500 focus:border-green-500"></textarea>
-                </div>
-
-                <div class="pt-4 border-t dark:border-gray-700">
-                    <h3 class="text-lg font-semibold mb-2" data-i18n="total">Total:</h3>
-                    <p id="finalTotalAmount" class="text-3xl font-extrabold text-green-600 dark:text-green-400">₹0.00</p>
-                </div>
-
-                <button type="submit" id="payNowButton" class="w-full bg-red-600 text-white py-3 mt-4 rounded-md font-semibold hover:bg-red-700 transition duration-150" data-i18n="payNow">
-                    Pay Now via UPI
-                </button>
-            </form>
+            <button id="theme-toggle-icon" class="theme-toggle-icon">☀️</button>
         </div>
-    </div>
-    
-    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-lg flex justify-around p-3">
-        <a href="home.html" class="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
-            <span class="text-xs" data-i18n="catalog">Catalog</span>
-        </a>
-        <a href="cart.html" class="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zm-2.17-2l.4-2h4.72c.42 0 .78-.29.93-.72l.96-3.15c.15-.46-.01-.97-.37-1.25a.996.996 0 00-.56-.18H7.13l-.15-.42C6.44 5.78 5.6 5 4.65 5H3c-.55 0-1 .45-1 1s.45 1 1 1h1.65l3.67 11.59c.25.79.99 1.41 1.91 1.41h10c.55 0 1-.45 1-1s-.45-1-1-1H8.87a.998.998 0 00-.32.07c-.16.05-.32.07-.48.07H7z"></path></svg>
-            <span class="text-xs" data-i18n="cartTitle">Cart</span>
-        </a>
-        <a href="profile.html" class="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>
-            <span class="text-xs" data-i18n="myProfile">Profile</span>
-        </a>
-    </nav>
-    
-    <script type="module" src="script.js"></script>
-    <script type="module">
-        import { API_ENDPOINTS, toggleTheme, initializeTheme, checkAuth } from './script.js';
-        import { applyTranslations } from './i18n.js';
+    </header>
+
+    <main>
+        <h1 data-i18n="checkout">Checkout</h1>
         
-        checkAuth();
+        <div class="checkout-container">
+            <section id="order-summary">
+                <h2>Order Summary</h2>
+                <div id="cart-items-list">
+                    </div>
+                <h3 id="order-total" data-i18n="total">Total: ₹0.00</h3>
+            </section>
 
-        const checkoutForm = document.getElementById('checkoutForm');
-        const finalTotalAmount = document.getElementById('finalTotalAmount');
-        const checkoutUserName = document.getElementById('checkoutUserName');
-        const checkoutUserNumber = document.getElementById('checkoutUserNumber');
+            <section id="delivery-details-form">
+                <h2>Delivery Details</h2>
+                <form id="checkout-form">
+                    
+                    <p class="input-label" data-i18n="name">Name</p>
+                    <input type="text" id="delivery-name" placeholder="Name for Delivery" class="uniform-input" required>
+                    
+                    <p class="input-label" data-i18n="phone">Phone</p>
+                    <div class="phone-input-group">
+                        <span class="custom-country-code-fix">+91</span>
+                        <input 
+                            type="tel" 
+                            id="delivery-phone" 
+                            placeholder="Phone for Delivery" 
+                            class="uniform-input phone-number-input" 
+                            required 
+                            maxlength="10" 
+                            pattern="[0-9]{10}"
+                            inputmode="numeric"
+                        >
+                    </div>
 
-        // Static UPI ID and Merchant Name - CHANGE THIS TO YOUR ACTUAL UPI ID
-        const UPI_ID = "YOUR_UPI_ID_HERE@upi"; 
-        const MERCHANT_NAME = "BooksByNIK";
+                    <p class="input-label" data-i18n="pincode">Pincode</p>
+                    <input 
+                        type="tel" 
+                        id="pincode-input" 
+                        placeholder="6-digit Pincode" 
+                        class="uniform-input" 
+                        required 
+                        maxlength="6" 
+                        pattern="[0-9]{6}"
+                        inputmode="numeric"
+                    >
 
-        function calculateTotal() {
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const total = cart.reduce((sum, item) => sum + (parseFloat(item.price) * parseInt(item.quantity)), 0);
-            return total.toFixed(2);
+                    <p class="input-label" data-i18n="address">Address</p>
+                    <textarea id="delivery-address" placeholder="Full Delivery Address" class="uniform-input" required></textarea>
+                    
+                    <p id="checkout-message" style="color: red;"></p>
+
+                    <button type="submit" id="checkout-button" data-i18n="checkout">Place Order</button>
+                </form>
+            </section>
+        </div>
+    </main>
+    
+    <nav class="bottom-nav">
+        <div class="nav-links">
+            <a href="home.html">
+                <span class="nav-icon">🏠</span>
+                <span data-i18n="catalog">Catalog</span>
+            </a>
+            <a href="cart.html">
+                <span class="nav-icon">🛒</span>
+                <span data-i18n="cart">Cart</span>
+            </a>
+            <a href="profile.html">
+                <span class="nav-icon">👤</span>
+                <span data-i18n="profile">Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <footer>
+        &copy; 2025 BooksByNIK. All rights reserved.
+    </footer>
+
+    <script type="module">
+        import { getUserProfile, initializeThemeSwitch, initializeLanguageSelector, API_ENDPOINTS } from './script.js';
+
+        const userProfile = getUserProfile();
+
+        if (!userProfile) {
+            window.location.href = 'index.html'; 
         }
 
-        function createUPIIntent(amount, address) {
-            const userNumber = localStorage.getItem('userNumber') || '0';
-            const userName = localStorage.getItem('userName') || 'User';
-            const transactionRef = `NIKBOOK-${userNumber}-${Date.now().toString().slice(-6)}`;
-
-            const upiUri = `upi://pay?pa=${UPI_ID}&pn=${MERCHANT_NAME}&am=${amount}&cu=INR&tn=Order%20for%20${userName}%20at%20${address}&tr=${transactionRef}`;
-            return upiUri;
-        }
-
-        // --- Event Listeners and Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
-            initializeTheme();
-            applyTranslations();
+            initializeThemeSwitch();
+            initializeLanguageSelector();
             
-            const total = calculateTotal();
-            finalTotalAmount.textContent = `₹${total}`;
-            
-            checkoutUserName.textContent = localStorage.getItem('userName') || 'N/A';
-            checkoutUserNumber.textContent = localStorage.getItem('userNumber') || 'N/A';
+            // Pre-fill form fields with user profile data
+            document.getElementById('delivery-name').value = userProfile.name || '';
+            document.getElementById('delivery-phone').value = userProfile.phone || '';
+
+            const checkoutForm = document.getElementById('checkout-form');
+            checkoutForm.addEventListener('submit', handleCheckout);
         });
 
-        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-
-        checkoutForm.addEventListener('submit', async (e) => {
+        async function handleCheckout(e) {
             e.preventDefault();
             
-            const address = document.getElementById('fullAddress').value.trim();
-            if (!address) {
-                alert("Please enter a full shipping address.");
-                return;
-            }
-
-            const total = calculateTotal();
-            const encodedAddress = encodeURIComponent(address);
-            const upiLink = createUPIIntent(total, encodedAddress);
-
-            // Log the order to the sheet BEFORE redirecting to UPI
-            await logOrderToSheet(total, address);
+            const totalAmount = 1000; // Placeholder: Replace with actual cart total
             
-            // Redirect to UPI app
-            window.location.href = upiLink;
-        });
-        
-        async function logOrderToSheet(total, address) {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const orderDetails = JSON.stringify(cart.map(item => ({ 
-                id: item.id, 
-                qty: item.quantity 
-            })));
+            const orderData = {
+                // User's registered phone (for backend linking)
+                user_phone: userProfile.phone, 
+                
+                // Delivery details (editable by user)
+                delivery_name: document.getElementById('delivery-name').value,
+                delivery_phone: document.getElementById('delivery-phone').value,
+                pincode: document.getElementById('pincode-input').value,
+                address: document.getElementById('delivery-address').value,
+                
+                // Order content (Placeholder for actual cart items)
+                items_json: JSON.stringify([{isbn: "123", qty: 1, price: 500}]), 
+                total_amount: totalAmount,
+            };
 
-            const formData = new URLSearchParams();
-            formData.append('action', 'logOrder');
-            formData.append('userNumber', localStorage.getItem('userNumber'));
-            formData.append('userName', localStorage.getItem('userName'));
-            formData.append('address', address);
-            formData.append('total', total);
-            formData.append('orderDetails', orderDetails); 
+            const checkoutButton = document.getElementById('checkout-button');
+            const messageElement = document.getElementById('checkout-message');
 
+            checkoutButton.disabled = true;
+            messageElement.textContent = "Submitting Order...";
+            messageElement.style.color = 'blue';
+
+            // NOTE: This will fail until you deploy your Orders API and update API_ENDPOINTS.ORDERS_API_ENDPOINT
             try {
-                // Call the ORDER_API_ENDPOINT
-                await fetch(API_ENDPOINTS.ORDERS_API_ENDPOINT, {
+                const response = await fetch(API_ENDPOINTS.ORDERS_API_ENDPOINT, {
                     method: 'POST',
-                    mode: 'no-cors', 
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: formData.toString()
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(orderData)
                 });
-                console.log('Order logged successfully (API call sent).');
+
+                const result = await response.json();
+
+                if (result.success) {
+                    messageElement.textContent = "Order Placed Successfully! Thank you.";
+                    messageElement.style.color = 'green';
+                    // Clear cart storage here (when cart logic is implemented)
+                    // window.location.href = 'order_confirmation.html'; 
+                } else {
+                    messageElement.textContent = "Order submission failed: " + (result.error || "Server Error");
+                    messageElement.style.color = 'red';
+                }
             } catch (error) {
-                console.error('Error logging order to sheet:', error);
-                // Non-critical failure: allow UPI redirect to happen
+                messageElement.textContent = 'Could not connect to the Orders API.';
+                messageElement.style.color = 'red';
+            } finally {
+                checkoutButton.disabled = false;
             }
         }
     </script>

@@ -16,16 +16,12 @@
             <a href="profile.html" data-i18n="profile">Profile</a>
         </nav>
         <div class="header-controls">
-            <label for="lang-selector" data-i18n="languageTitle">Language:</label>
-            <select id="lang-selector">
+            <select id="lang-selector" class="uniform-input">
                 <option value="en">English</option>
                 <option value="ml">മലയാളം</option>
             </select>
             
-            <label class="switch">
-                <input type="checkbox" id="theme-toggle">
-                <span class="slider round"></span>
-            </label>
+            <button id="theme-toggle-icon" class="theme-toggle-icon">☀️</button>
         </div>
     </header>
 
@@ -49,21 +45,37 @@
 
     </main>
 
+    <nav class="bottom-nav">
+        <div class="nav-links">
+            <a href="home.html">
+                <span class="nav-icon">🏠</span>
+                <span data-i18n="catalog">Catalog</span>
+            </a>
+            <a href="cart.html">
+                <span class="nav-icon">🛒</span>
+                <span data-i18n="cart">Cart</span>
+            </a>
+            <a href="profile.html">
+                <span class="nav-icon">👤</span>
+                <span data-i18n="profile">Profile</span>
+            </a>
+        </div>
+    </nav>
+
     <footer>
         &copy; 2025 BooksByNIK. All rights reserved.
     </footer>
 
     <script type="module">
-        // Import necessary components and constants from the central script
         import { 
-            API_ENDPOINTS, 
-            getCoverImageUrl, 
-            formatCurrency, 
-            getTranslation, 
-            splitImages 
+            API_ENDPOINTS, getCoverImageUrl, formatCurrency, getTranslation, splitImages, getUserProfile
         } from './script.js';
 
-        // State variables for infinite scroll
+        // Redirect unauthorized users
+        if (!getUserProfile()) {
+             window.location.href = 'index.html'; 
+        }
+
         let offset = 0;
         const limit = 10;
         let hasMore = true;
@@ -73,11 +85,6 @@
         const loadingIndicator = document.getElementById('loading-indicator');
         const endOfResults = document.getElementById('end-of-results');
 
-        /**
-         * Creates the HTML structure for a single book card.
-         * @param {object} book - The book data object from the API.
-         * @returns {string} The HTML string for the book card.
-         */
         function createBookCard(book) {
             const images = splitImages(book.cover);
             const coverImage = images.length > 0 ? getCoverImageUrl(images[0]) : 'placeholder.jpg';
@@ -91,7 +98,6 @@
                         <h3 class="book-title">${book.title}</h3>
                         <p class="book-author">${book.author}</p>
                         <p class="book-price">${formatCurrency(book.price)}</p>
-                        <p class="book-language">${getTranslation(book.language)}</p>
                         <div class="card-actions">
                             <a href="details.html?isbn=${book.isbn}" class="button view-details-button" data-i18n="viewDetails">${getTranslation('viewDetails')}</a>
                             <button class="button add-to-cart-button" data-isbn="${book.isbn}" data-i18n="addToCart">${getTranslation('addToCart')}</button>
@@ -101,15 +107,11 @@
             `;
         }
 
-        /**
-         * Fetches a chunk of the catalog based on the current offset.
-         * @param {boolean} [reset=false] - If true, resets the offset and clears the container.
-         */
         window.fetchCatalog = async function(reset = false) {
             if (reset) {
                 offset = 0;
                 hasMore = true;
-                catalogContainer.innerHTML = ''; // Clear existing books
+                catalogContainer.innerHTML = ''; 
                 endOfResults.style.display = 'none';
             }
             
@@ -121,12 +123,6 @@
                 const url = `${API_ENDPOINTS.CATALOG_API_ENDPOINT}?limit=${limit}&offset=${offset}`;
                 const response = await fetch(url);
                 const data = await response.json();
-
-                if (data.error) {
-                    catalogContainer.innerHTML = `<p style="color: red;">Error loading catalog: ${data.error}</p>`;
-                    hasMore = false;
-                    return;
-                }
 
                 if (data.data.length > 0) {
                     const html = data.data.map(createBookCard).join('');
@@ -142,7 +138,6 @@
 
             } catch (error) {
                 console.error("Failed to fetch catalog:", error);
-                catalogContainer.innerHTML += `<p style="color: red;">Failed to load data. Check network connection.</p>`;
             } finally {
                 isLoading = false;
                 loadingIndicator.style.display = 'none';
@@ -153,11 +148,8 @@
             }
         }
 
-        /**
-         * Handles the infinite scroll logic when the user approaches the bottom.
-         */
         const handleScroll = () => {
-            const scrollThreshold = 1000; // Load new books when within 1000px of the bottom
+            const scrollThreshold = 1000; 
             const windowHeight = window.innerHeight;
             const documentHeight = document.documentElement.scrollHeight;
             const scrollTop = document.documentElement.scrollTop;
@@ -166,16 +158,9 @@
                 window.fetchCatalog();
             }
         };
-
-        // ==========================================================
-        // C. Initialization
-        // ==========================================================
         
         document.addEventListener('DOMContentLoaded', () => {
-            // Start the initial load of the catalog
             window.fetchCatalog();
-            
-            // Add the event listener for infinite scroll
             window.addEventListener('scroll', handleScroll);
         });
         
