@@ -1,103 +1,134 @@
 // ====================================================================
-// C. Internationalization (i18n) - Language Management
+// A. Language Data (Translations)
 // ====================================================================
 
-export const translations = {
-    "en": {
-        "catalog": "Catalog",
-        "cart": "Cart",
-        "profile": "Profile",
-        "checkout": "Checkout",
-        "search": "Search books...",
-        "viewdetails": "View Details",
-        "addtocart": "Add to Cart",
-        "nobooksfound": "No books found.",
-        "languagetitle": "Language:",
-        "alllanguages": "All",
-        "malayalam": "Malayalam", 
-        "english": "English",
-        "name": "Name",
-        "phone": "Phone",
-        "noeditprofile": "To change your name or phone number, please logout and re-register.",
-        "pincode": "Pincode",
-        "address": "Address",
-        "total": "Total",
-        
-        // Login Page Specific Keys
+const translations = {
+    en: {
+        // --- General ---
         "booksbynik": "BooksByNIK",
         "loginorregister": "Login or Register",
+        "loginregister": "Login / Register",
+        "profile": "Profile",
+        "cart": "Cart",
+        "home": "Home",
+        "english": "English",
+        "malayalam": "മലയാളം",
+
+        // --- Login Page (index.html) ---
         "enteryourfullofficialname": "Enter Your Full Official Name",
         "enteryour10digitphonenumber": "Enter your 10 digit phone number",
-        "loginregister": "Login / Register",
-        "profile_note_change": "(You can switch language anytime from profile settings)"
+        "profile_note_change": "(You can switch language anytime from profile settings)",
+
+        // --- Catalog Page (home.html) ---
+        "catalog": "Book Catalog",
+        "searchbooks": "Search Books...",
+        "bestsellers": "Bestsellers",
+        "allbooks": "All Books",
+        "price": "Price:",
+        "pages": "Pages:",
+        "language": "Language:",
+        "format": "Format:",
+        "addtocart": "Add to Cart",
+
+        // --- Cart Page (cart.html) ---
+        "yourcart": "Your Cart",
+        "checkout": "Proceed to Checkout",
+        "emptycart": "Your cart is empty.",
+        "subtotal": "Subtotal",
+        "delivery": "Delivery Charges",
+        "total": "Total Amount",
+        "continue_shopping": "Continue Shopping",
+        
+        // --- Profile Page (profile.html) ---
+        "editprofile": "Edit Profile",
+        "currentlanguage": "Current Language",
+        "pincode": "Pincode",
+        "address": "Address",
+        "updateprofile": "Update Profile",
+        "logout": "Logout"
     },
-    "ml": {
-        "catalog": "കാറ്റലോഗ്",
-        "cart": "കാർട്ട്",
+    ml: {
+        // --- General ---
+        "booksbynik": "ബുക്ക്‌സ്‌ബൈനിക്കിൾ",
+        "loginorregister": "പ്രവേശിക്കുക / രജിസ്റ്റർ ചെയ്യുക",
+        "loginregister": "പ്രവേശിക്കുക / രജിസ്റ്റർ ചെയ്യുക",
         "profile": "പ്രൊഫൈൽ",
-        "checkout": "ചെക്ക്ഔട്ട്",
-        "search": "പുസ്തകങ്ങൾ തിരയുക...",
-        "viewdetails": "വിശദാംശങ്ങൾ കാണുക",
-        "addtocart": "കാർട്ടിൽ ചേർക്കുക",
-        "nobooksfound": "പുസ്തകങ്ങളൊന്നും കണ്ടെത്തിയില്ല.",
-        "languagetitle": "ഭാഷ:",
-        "alllanguages": "എല്ലാം",
+        "cart": "കാർട്ട്",
+        "home": "ഹോം",
+        "english": "English",
         "malayalam": "മലയാളം",
-        "english": "ഇംഗ്ലീഷ്",
-        "name": "പേര്",
-        "phone": "ഫോൺ",
-        "noeditprofile": "നിങ്ങളുടെ പേരോ ഫോൺ നമ്പറോ മാറ്റാൻ, ലോഗൗട്ട് ചെയ്ത് വീണ്ടും രജിസ്റ്റർ ചെയ്യുക.",
+
+        // --- Login Page (index.html) ---
+        "enteryourfullofficialname": "നിങ്ങളുടെ പൂർണ്ണമായ ഔദ്യോഗിക നാമം നൽകുക",
+        "enteryour10digitphonenumber": "നിങ്ങളുടെ 10 അക്ക ഫോൺ നമ്പർ നൽകുക",
+        "profile_note_change": "(പ്രൊഫൈൽ ക്രമീകരണങ്ങളിൽ നിന്ന് നിങ്ങൾക്ക് എപ്പോൾ വേണമെങ്കിലും ഭാഷ മാറ്റാം)",
+
+        // --- Catalog Page (home.html) ---
+        "catalog": "പുസ്തക കാറ്റലോഗ്",
+        "searchbooks": "പുസ്തകങ്ങൾ തിരയുക...",
+        "bestsellers": "ഏറ്റവും കൂടുതൽ വിറ്റുപോകുന്നവ",
+        "allbooks": "എല്ലാ പുസ്തകങ്ങളും",
+        "price": "വില:",
+        "pages": "പേജുകൾ:",
+        "language": "ഭാഷ:",
+        "format": "ഫോർമാറ്റ്:",
+        "addtocart": "കാർട്ടിൽ ചേർക്കുക",
+
+        // --- Cart Page (cart.html) ---
+        "yourcart": "നിങ്ങളുടെ കാർട്ട്",
+        "checkout": "ചെക്കൗട്ടിലേക്ക് പോകുക",
+        "emptycart": "നിങ്ങളുടെ കാർട്ട് ശൂന്യമാണ്.",
+        "subtotal": "ആകെത്തുക",
+        "delivery": "ഡെലിവറി നിരക്കുകൾ",
+        "total": "ആകെ തുക",
+        "continue_shopping": "ഷോപ്പിംഗ് തുടരുക",
+        
+        // --- Profile Page (profile.html) ---
+        "editprofile": "പ്രൊഫൈൽ എഡിറ്റ് ചെയ്യുക",
+        "currentlanguage": "നിലവിലെ ഭാഷ",
         "pincode": "പിൻകോഡ്",
         "address": "വിലാസം",
-        "total": "ആകെ",
-        
-        // Login Page Specific Keys
-        "booksbynik": "ബുക്സ്ബൈനിക്ക്",
-        "loginorregister": "ലോഗിൻ / രജിസ്റ്റർ",
-        "enteryourfullofficialname": "നിങ്ങളുടെ പൂർണ്ണമായ ഔദ്യോഗിക പേര് നൽകുക",
-        "enteryour10digitphonenumber": "നിങ്ങളുടെ 10 അക്ക ഫോൺ നമ്പർ നൽകുക",
-        "loginregister": "ലോഗിൻ / രജിസ്റ്റർ",
-        "profile_note_change": "(പ്രൊഫൈൽ ക്രമീകരണങ്ങളിൽ നിന്ന് നിങ്ങൾക്ക് എപ്പോൾ വേണമെങ്കിലും ഭാഷ മാറ്റാവുന്നതാണ്)"
+        "updateprofile": "പ്രൊഫൈൽ അപ്ഡേറ്റ് ചെയ്യുക",
+        "logout": "ലോഗൗട്ട്"
     }
 };
 
-const LANG_KEY = 'booksbynik_lang';
-export let currentLang = localStorage.getItem(LANG_KEY) || 'en';
+// ====================================================================
+// B. Core Functions
+// ====================================================================
 
-export function getTranslation(key) {
-    const langKey = key.toLowerCase().trim(); 
-    return translations[currentLang][langKey] || key; 
+/**
+ * Applies translations to all elements with data-i18n attributes.
+ * Uses the language stored in localStorage or defaults to 'en'.
+ */
+export function applyTranslations() {
+    // Get the current language from localStorage or user profile, default to English
+    const profileJson = localStorage.getItem('userProfile');
+    const userLang = profileJson ? JSON.parse(profileJson).language : localStorage.getItem('appLang') || 'en';
+    
+    setLanguage(userLang);
 }
 
-export function applyTranslations() {
-    // 1. Translate inner text content (h1, h2, buttons, static text)
+
+/**
+ * Sets the active language and applies translations to the document.
+ * @param {string} langCode - The two-letter language code (e.g., 'en', 'ml').
+ */
+export function setLanguage(langCode) {
+    const langData = translations[langCode] || translations.en;
+    
+    // 1. Update text content
     document.querySelectorAll('[data-i18n]').forEach(element => {
         const key = element.getAttribute('data-i18n');
-        element.textContent = getTranslation(key);
+        element.textContent = langData[key] || element.textContent;
     });
-    
-    // 2. Translate placeholder attributes (inputs)
+
+    // 2. Update placeholder text
     document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
         const key = element.getAttribute('data-i18n-placeholder');
-        if (element.tagName === 'INPUT' || element.tagName === 'SELECT' || element.tagName === 'TEXTAREA') {
-             element.setAttribute('placeholder', getTranslation(key));
-        }
+        element.placeholder = langData[key] || element.placeholder;
     });
-}
-
-export function setLanguage(lang) {
-    currentLang = lang;
-    localStorage.setItem(LANG_KEY, lang);
-    applyTranslations();
     
-    // Update the header language selector on other pages
-    const headerLangSelector = document.getElementById('lang-selector');
-    if (headerLangSelector) {
-        headerLangSelector.value = lang;
-    }
-
-    // Trigger catalog refresh on home.html if necessary
-    if (typeof window.fetchCatalog === 'function') {
-        window.fetchCatalog(true); 
-    }
+    // 3. Save the active language for future use
+    localStorage.setItem('appLang', langCode);
 }
