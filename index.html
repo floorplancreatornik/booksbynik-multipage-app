@@ -11,7 +11,9 @@
     <header>
         <div class="logo">BooksByNIK</div>
         <div class="header-controls">
-            <button id="theme-toggle-icon" class="theme-toggle-icon">☀️</button>
+            <button id="theme-toggle-icon" class="theme-toggle-icon">
+                <span id="theme-icon-placeholder"></span>
+            </button>
         </div>
     </header>
 
@@ -89,7 +91,7 @@
         });
 
         async function handleLogin(e) {
-            e.preventDefault(); // Prevents page reload on form submission (CRITICAL FIX)
+            e.preventDefault(); // CRITICAL: Prevents page reload on form submission
             
             // Get language value from the form selector 
             const langSelector = document.getElementById('lang-selector-form');
