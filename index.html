@@ -65,22 +65,17 @@
     </main>
 
     <script type="module">
-        // Import core script functions and API endpoints
         import { API_ENDPOINTS, initializeThemeSwitch, applyTranslations } from './script.js';
-        // Import language functions from the separate i18n file
         import { setLanguage } from './i18n.js'; 
 
         document.addEventListener('DOMContentLoaded', () => {
             initializeThemeSwitch();
-            // This applies translations to the static text and placeholders on load
             applyTranslations(); 
             
-            // Language selector logic for testing/selection BEFORE login
             const langSelector = document.getElementById('lang-selector-form');
             if(langSelector) {
-                // Set the app's language based on the default selected value
+                // Set initial language based on the selector's value
                 setLanguage(langSelector.value); 
-                // Attach event listener for immediate language switch testing
                 langSelector.addEventListener('change', (e) => setLanguage(e.target.value));
             }
 
@@ -91,9 +86,8 @@
         });
 
         async function handleLogin(e) {
-            e.preventDefault(); // CRITICAL: Prevents page reload on form submission
-            
-            // Get language value from the form selector 
+            e.preventDefault(); // CRITICAL: Prevents page reload
+
             const langSelector = document.getElementById('lang-selector-form');
             const language = langSelector ? langSelector.value : 'en';
 
@@ -131,12 +125,12 @@
                 
                 if (result.success) {
                     localStorage.setItem('userProfile', JSON.stringify(result.user));
-                    setLanguage(result.user.language); // Set the language permanently
+                    setLanguage(result.user.language); 
                     
                     messageElement.textContent = "Success! Redirecting...";
                     messageElement.style.color = 'green';
                     
-                    window.location.href = 'home.html'; // Redirect to home page
+                    window.location.href = 'home.html'; 
                     
                 } else {
                     messageElement.textContent = "Login failed: " + (result.error || result.message);
