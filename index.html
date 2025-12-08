@@ -8,66 +8,103 @@
 </head>
 <body>
 
+    <header>
+        <div class="logo">BooksByNIK</div>
+        <div class="header-controls">
+            <label for="lang-selector" data-i18n="languageTitle" style="white-space: nowrap;">Language:</label>
+            <select id="lang-selector" class="uniform-input">
+                <option value="en">English</option>
+                <option value="ml">മലയാളം</option>
+            </select>
+            
+            <label class="switch">
+                <input type="checkbox" id="theme-toggle">
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </header>
+
     <main class="login-container">
         <div class="login-card">
             <h1>BooksByNIK</h1>
             <h2>Login or Register</h2>
             
             <form id="login-form">
-                <input type="text" id="name-input" placeholder="Your Name (Required)" required>
-                <input type="tel" id="phone-input" placeholder="Phone Number (Required)" required>
+                
+                <input type="text" id="name-input" placeholder="Enter Your Full Official Name" class="uniform-input" required>
+                
+                <div class="phone-input-group">
+                    <span class="custom-country-code-fix">+91</span>
+                    <input 
+                        type="tel" 
+                        id="phone-input" 
+                        placeholder="Enter your 10 digit phone number" 
+                        class="uniform-input phone-number-input" 
+                        required 
+                        maxlength="10" 
+                        pattern="[0-9]{10}"
+                        inputmode="numeric"
+                    >
+                </div>
                 
                 <p id="login-message" style="color: red;"></p>
                 
                 <button type="submit" id="login-button">Login / Register</button>
+                
+                <p class="profile-note">
+                    (You can switch language anytime, even before logging in. Your selection will be saved upon successful login.)
+                </p>
             </form>
         </div>
     </main>
 
     <script type="module">
-        // Import necessary components from the central script
-        // currentLang is needed to record user's preferred language on registration
-        import { API_ENDPOINTS, currentLang } from './script.js';
+        // The script logic remains the same, but it now pulls the language from the header selector.
+        import { API_ENDPOINTS, initializeThemeSwitch, initializeLanguageSelector, currentLang } from './script.js';
 
+        // Initialize Theme and Language controls on the Login Page
         document.addEventListener('DOMContentLoaded', () => {
+            initializeThemeSwitch();
+            initializeLanguageSelector(); 
+            
             const loginForm = document.getElementById('login-form');
             if (loginForm) {
-                // Attach the handler to the form's submit event
                 loginForm.addEventListener('submit', handleLogin);
             }
         });
 
         async function handleLogin(e) {
-            // 1. CRITICAL: PREVENT PAGE RELOAD BUG
             e.preventDefault(); 
+            
+            // Get the language value directly from the selector or fallback to currentLang
+            const langSelector = document.getElementById('lang-selector');
+            const language = langSelector ? langSelector.value : currentLang;
 
-            // 2. Get input values and elements
             const name = document.getElementById('name-input').value.trim();
             const phone = document.getElementById('phone-input').value.trim();
             const loginButton = document.getElementById('login-button');
             const messageElement = document.getElementById('login-message');
             
-            const language = currentLang; // Get the language currently set in script.js
-
-            // Input validation
+            // Validation Check for 10 digits
             if (!name || !phone) {
-                messageElement.textContent = "Please enter both name and phone number.";
+                messageElement.textContent = "Please fill in all fields.";
+                return;
+            }
+            if (phone.length !== 10 || isNaN(phone)) {
+                 messageElement.textContent = "Please enter a valid 10-digit phone number.";
                 return;
             }
             
-            // UI Feedback: Disable button and show loading
             loginButton.disabled = true;
             messageElement.textContent = "Verifying profile...";
             messageElement.style.color = 'blue';
 
             try {
-                // 3. Send data to the Login/Profile API (doPost)
+                // Send name, 10-digit phone, and the selected language
                 const response = await fetch(API_ENDPOINTS.PROFILE_API_ENDPOINT, {
                     method: 'POST',
                     mode: 'cors',
-                    headers: {
-                        'Content-Type': 'text/plain;charset=utf-8', 
-                    },
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify({
                         name: name,
                         phone: phone,
@@ -78,17 +115,15 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    // 4. Successful login/registration: Store user data and redirect
+                    // Store user data (including the selected language) locally
                     localStorage.setItem('userProfile', JSON.stringify(result.user));
                     
                     messageElement.textContent = "Success! Redirecting...";
                     messageElement.style.color = 'green';
                     
-                    // Redirect to the main catalog page
                     window.location.href = 'home.html'; 
                     
                 } else {
-                    // Handle API errors
                     messageElement.textContent = "Login failed: " + (result.error || result.message);
                     messageElement.style.color = 'red';
                 }
