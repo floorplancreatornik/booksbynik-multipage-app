@@ -17,23 +17,31 @@
 
     <main class="login-container">
         <div class="login-card">
-            <h1>BooksByNIK</h1>
-            <h2>Login or Register</h2>
+            <h1 data-i18n="booksbynik">BooksByNIK</h1>
+            <h2 data-i18n="loginorregister">Login or Register</h2>
             
             <form id="login-form">
                 
                 <select id="lang-selector-form" class="uniform-input">
-                    <option value="en">English</option>
-                    <option value="ml">മലയാളം</option>
+                    <option value="en" data-i18n="english">English</option>
+                    <option value="ml" data-i18n="malayalam">മലയാളം</option>
                 </select>
 
-                <input type="text" id="name-input" placeholder="Enter Your Full Official Name" class="uniform-input" required>
+                <input 
+                    type="text" 
+                    id="name-input" 
+                    data-i18n-placeholder="enteryourfullofficialname" 
+                    placeholder="Enter Your Full Official Name" 
+                    class="uniform-input" 
+                    required
+                >
                 
                 <div class="phone-input-group">
                     <span class="custom-country-code-fix">+91</span>
                     <input 
                         type="tel" 
                         id="phone-input" 
+                        data-i18n-placeholder="enteryour10digitphonenumber"
                         placeholder="Enter your 10 digit phone number" 
                         class="uniform-input phone-number-input" 
                         required 
@@ -45,27 +53,30 @@
                 
                 <p id="login-message" style="color: red;"></p>
                 
-                <button type="submit" id="login-button">Login / Register</button>
+                <button type="submit" id="login-button" data-i18n="loginregister">Login / Register</button>
                 
-                <p class="profile-note">
-                    (You can switch language anytime, even before logging in. Your selection will be saved upon successful login.)
+                <p class="profile-note" data-i18n="profile_note_change">
+                    (You can switch language anytime from profile settings)
                 </p>
             </form>
         </div>
     </main>
 
     <script type="module">
+        // Import core script functions and API endpoints
         import { API_ENDPOINTS, initializeThemeSwitch, applyTranslations } from './script.js';
-        import { setLanguage } from './i18n.js';
+        // Import language functions from the separate i18n file
+        import { setLanguage } from './i18n.js'; 
 
         document.addEventListener('DOMContentLoaded', () => {
             initializeThemeSwitch();
+            // This applies translations to the static text and placeholders on load
             applyTranslations(); 
             
             // Language selector logic for testing/selection BEFORE login
             const langSelector = document.getElementById('lang-selector-form');
             if(langSelector) {
-                // Ensure initial app language matches the selector's value
+                // Set the app's language based on the default selected value
                 setLanguage(langSelector.value); 
                 // Attach event listener for immediate language switch testing
                 langSelector.addEventListener('change', (e) => setLanguage(e.target.value));
@@ -78,9 +89,9 @@
         });
 
         async function handleLogin(e) {
-            e.preventDefault(); 
+            e.preventDefault(); // Prevents page reload on form submission (CRITICAL FIX)
             
-            // Get language value from the form selector (required for saving to profile)
+            // Get language value from the form selector 
             const langSelector = document.getElementById('lang-selector-form');
             const language = langSelector ? langSelector.value : 'en';
 
@@ -118,12 +129,12 @@
                 
                 if (result.success) {
                     localStorage.setItem('userProfile', JSON.stringify(result.user));
-                    setLanguage(result.user.language); 
+                    setLanguage(result.user.language); // Set the language permanently
                     
                     messageElement.textContent = "Success! Redirecting...";
                     messageElement.style.color = 'green';
                     
-                    window.location.href = 'home.html'; 
+                    window.location.href = 'home.html'; // Redirect to home page
                     
                 } else {
                     messageElement.textContent = "Login failed: " + (result.error || result.message);
@@ -132,7 +143,7 @@
 
             } catch (error) {
                 console.error('Login API error:', error);
-                messageElement.textContent = 'Could not connect to the server. Please check your network.';
+                messageElement.textContent = 'Could not connect to the server. Please check your network or API endpoint.';
                 messageElement.style.color = 'red';
             } finally {
                 loginButton.disabled = false;
