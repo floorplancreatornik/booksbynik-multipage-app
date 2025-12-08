@@ -11,11 +11,6 @@
     <header>
         <div class="logo">BooksByNIK</div>
         <div class="header-controls">
-            <select id="lang-selector" class="uniform-input">
-                <option value="en">English</option>
-                <option value="ml">മലയാളം</option>
-            </select>
-            
             <button id="theme-toggle-icon" class="theme-toggle-icon">☀️</button>
         </div>
     </header>
@@ -27,6 +22,11 @@
             
             <form id="login-form">
                 
+                <select id="lang-selector-form" class="uniform-input">
+                    <option value="en">English</option>
+                    <option value="ml">മലയാളം</option>
+                </select>
+
                 <input type="text" id="name-input" placeholder="Enter Your Full Official Name" class="uniform-input" required>
                 
                 <div class="phone-input-group">
@@ -55,12 +55,22 @@
     </main>
 
     <script type="module">
-        import { API_ENDPOINTS, initializeThemeSwitch, initializeLanguageSelector, currentLang, setLanguage } from './script.js';
+        import { API_ENDPOINTS, initializeThemeSwitch, applyTranslations } from './script.js';
+        import { setLanguage } from './i18n.js';
 
         document.addEventListener('DOMContentLoaded', () => {
             initializeThemeSwitch();
-            initializeLanguageSelector(); 
+            applyTranslations(); 
             
+            // Language selector logic for testing/selection BEFORE login
+            const langSelector = document.getElementById('lang-selector-form');
+            if(langSelector) {
+                // Ensure initial app language matches the selector's value
+                setLanguage(langSelector.value); 
+                // Attach event listener for immediate language switch testing
+                langSelector.addEventListener('change', (e) => setLanguage(e.target.value));
+            }
+
             const loginForm = document.getElementById('login-form');
             if (loginForm) {
                 loginForm.addEventListener('submit', handleLogin);
@@ -70,9 +80,9 @@
         async function handleLogin(e) {
             e.preventDefault(); 
             
-            const langSelector = document.getElementById('lang-selector');
-            // Use the language selected in the header selector
-            const language = langSelector ? langSelector.value : currentLang;
+            // Get language value from the form selector (required for saving to profile)
+            const langSelector = document.getElementById('lang-selector-form');
+            const language = langSelector ? langSelector.value : 'en';
 
             const name = document.getElementById('name-input').value.trim();
             const phone = document.getElementById('phone-input').value.trim();
@@ -100,16 +110,14 @@
                     body: JSON.stringify({
                         name: name,
                         phone: phone,
-                        language: language
+                        language: language 
                     })
                 });
 
                 const result = await response.json();
                 
                 if (result.success) {
-                    // Store user data locally
                     localStorage.setItem('userProfile', JSON.stringify(result.user));
-                    // Ensure the global app language is set to the user's saved preference
                     setLanguage(result.user.language); 
                     
                     messageElement.textContent = "Success! Redirecting...";
